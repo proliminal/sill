@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- What plugins reference. No WPF or Windows Forms on purpose: plugins describe their pages, Sill draws them. -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Proliminal.Sill.Sdk</RootNamespace>
+    <AssemblyName>Proliminal.Sill.Sdk</AssemblyName>
+    <!-- Plugin authors only see the SDK through IntelliSense, so every public member is documented. -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <!-- Only the SDK is open source; Sill itself isn't. -->
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <!-- Sill builds the page models plugins describe; plugins only get the builders. -->
+  <ItemGroup>
+    <InternalsVisibleTo Include="sill" />
+  </ItemGroup>
+
+</Project>

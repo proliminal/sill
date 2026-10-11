@@ -1,0 +1,144 @@
+using Proliminal.Sill.Sdk.Abstractions;
+using Proliminal.Sill.Sdk.Pages.Model;
+
+namespace Proliminal.Sill.Sdk.Pages.Abstractions;
+
+/// <summary>
+///     Sets what every card has besides its title: an icon, a description and when it's shown and enabled.
+/// </summary>
+/// <typeparam name="TSelf">The builder itself, so calls can be chained.</typeparam>
+public abstract class CardBuilder<TSelf>
+    where TSelf : CardBuilder<TSelf>
+{
+    private readonly string _title;
+    private IReadOnlyValue<string>? _description;
+    private Glyph? _icon;
+    private IReadOnlyValue<bool>? _visibleWhen;
+    private IReadOnlyValue<bool>? _enabledWhen;
+    private IReadOnlyValue<string?>? _status;
+    private readonly List<CardAction> _actions = [];
+
+    private protected CardBuilder(string title)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(title);
+
+        _title = title;
+    }
+
+    private TSelf Self
+        => (TSelf)this;
+
+    internal CardInfo Info
+        => new(_title, _description, _icon, _visibleWhen, _enabledWhen, _status, _actions.ToArray());
+
+    /// <summary>
+    ///     Shows <paramref name="icon"/> left of the title. Cards without one leave the space out.
+    /// </summary>
+    /// <param name="icon">The icon.</param>
+    public TSelf Icon(Glyph icon)
+    {
+        if (icon.Text is null)
+            throw new ArgumentException("Use one of Glyph's icons, or Glyph.FromCodepoint.", nameof(icon));
+
+        _icon = icon;
+        return Self;
+    }
+
+    /// <summary>
+    ///     Shows <paramref name="description"/> under the title, saying what the card does.
+    /// </summary>
+    /// <param name="description">One or two sentences.</param>
+    public TSelf Description(string description)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(description);
+
+        _description = new ConstantValue<string>(description);
+        return Self;
+    }
+
+    /// <summary>
+    ///     Shows <paramref name="description"/> under the title, which changes with it, such as whether what the card
+    ///     opens is installed.
+    /// </summary>
+    /// <param name="description">One or two sentences.</param>
+    public TSelf Description(IReadOnlyValue<string> description)
+    {
+        _description = description ?? throw new ArgumentNullException(nameof(description));
+        return Self;
+    }
+
+    /// <summary>
+    ///     Shows <paramref name="status"/> left of the control, such as <c>Installed</c> or <c>Installing…</c>. It's hidden
+    ///     while it's <see langword="null"/> or empty.
+    /// </summary>
+    /// <param name="status">A word or two.</param>
+    public TSelf Status(IReadOnlyValue<string?> status)
+    {
+        _status = status ?? throw new ArgumentNullException(nameof(status));
+        return Self;
+    }
+
+    /// <summary>
+    ///     Adds a button left of the control, after the ones added before, such as Install next to a switch for
+    ///     something that's missing.
+    /// </summary>
+    /// <example>
+    ///     <code>
+    ///     .Action("Install", InstallAsync, action => action
+    ///         .VisibleWhen(isInstalled.Not()))
+    ///     </code>
+    /// </example>
+    /// <param name="label">The button's text.</param>
+    /// <param name="onClick">What the button does. The button is disabled until its task is done.</param>
+    /// <param name="build">Sets when the button is shown and enabled.</param>
+    public TSelf Action(string label, PluginAction onClick, Action<ActionBuilder>? build = null)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(label);
+        ArgumentNullException.ThrowIfNull(onClick);
+
+        var builder = new ActionBuilder();
+        build?.Invoke(builder);
+
+        _actions.Add(builder.Build(label, onClick));
+        return Self;
+    }
+
+    /// <summary>
+    ///     Adds a button whose action is done right away. See <see cref="Action(string, PluginAction, Action{ActionBuilder}?)"/>.
+    /// </summary>
+    /// <param name="label">The button's text.</param>
+    /// <param name="onClick">What the button does.</param>
+    /// <param name="build">Sets when the button is shown and enabled.</param>
+    public TSelf Action(string label, Action<IActionContext> onClick, Action<ActionBuilder>? build = null)
+    {
+        ArgumentNullException.ThrowIfNull(onClick);
+
+        return Action(label, context =>
+        {
+            onClick(context);
+            return Task.CompletedTask;
+        }, build);
+    }
+
+    /// <summary>
+    ///     Only shows the card while <paramref name="condition"/> is <see langword="true"/>, such as the folder of a
+    ///     "custom folder" option.
+    /// </summary>
+    /// <param name="condition">When the card is shown.</param>
+    public TSelf VisibleWhen(IReadOnlyValue<bool> condition)
+    {
+        _visibleWhen = condition ?? throw new ArgumentNullException(nameof(condition));
+        return Self;
+    }
+
+    /// <summary>
+    ///     Only enables the card's control while <paramref name="condition"/> is <see langword="true"/>. A bound value
+    ///     disables it too while it can't be changed.
+    /// </summary>
+    /// <param name="condition">When the control is enabled.</param>
+    public TSelf EnabledWhen(IReadOnlyValue<bool> condition)
+    {
+        _enabledWhen = condition ?? throw new ArgumentNullException(nameof(condition));
+        return Self;
+    }
+}
