@@ -35,7 +35,6 @@ internal sealed class ExternalValue<T>(Func<T> get, Func<T, Task> set, Func<bool
         {
             _isBusy = false;
 
-            // Shows what actually happened, also when it failed.
             Refresh();
         }
     }

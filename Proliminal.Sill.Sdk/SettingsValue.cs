@@ -28,7 +28,6 @@ internal sealed class SettingsValue<T, TValue>(IPluginSettings<T> settings, Func
         return Task.CompletedTask;
     }
 
-    // The file is watched, so the settings are always current.
     public void Refresh()
     {
     }

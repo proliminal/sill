@@ -17,6 +17,7 @@ public abstract class CardBuilder<TSelf>
     private IReadOnlyValue<bool>? _enabledWhen;
     private IReadOnlyValue<string?>? _status;
     private readonly List<CardAction> _actions = [];
+    private IReadOnlyValue<IReadOnlyList<CardDetail>>? _details;
 
     private protected CardBuilder(string title)
     {
@@ -29,7 +30,7 @@ public abstract class CardBuilder<TSelf>
         => (TSelf)this;
 
     internal CardInfo Info
-        => new(_title, _description, _icon, _visibleWhen, _enabledWhen, _status, _actions.ToArray());
+        => new(_title, _description, _icon, _visibleWhen, _enabledWhen, _status, _actions.ToArray(), _details);
 
     /// <summary>
     ///     Shows <paramref name="icon"/> left of the title. Cards without one leave the space out.
@@ -75,6 +76,24 @@ public abstract class CardBuilder<TSelf>
     public TSelf Status(IReadOnlyValue<string?> status)
     {
         _status = status ?? throw new ArgumentNullException(nameof(status));
+        return Self;
+    }
+
+    /// <summary>
+    ///     Shows <paramref name="details"/> as lines inside the card, under its description, such as what a plugin uses.
+    ///     For a few lines that belong to this card; a list of things of their own is a
+    ///     <see cref="CardsBuilder{TSelf}.List"/>. Nothing shows while it's empty.
+    /// </summary>
+    /// <example>
+    ///     <code>
+    ///     .Details(Values.External&lt;IReadOnlyList&lt;CardDetail&gt;&gt;(() =>
+    ///         [new("Reads the clipboard", "To decode what you copy.", Glyph.Paste)]))
+    ///     </code>
+    /// </example>
+    /// <param name="details">The lines, from top to bottom.</param>
+    public TSelf Details(IReadOnlyValue<IReadOnlyList<CardDetail>> details)
+    {
+        _details = details ?? throw new ArgumentNullException(nameof(details));
         return Self;
     }
 
