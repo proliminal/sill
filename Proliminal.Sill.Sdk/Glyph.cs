@@ -155,4 +155,49 @@ public readonly record struct Glyph
 
     /// <summary>A puzzle piece, for plugins and extensions.</summary>
     public static Glyph Puzzle { get; } = FromCodepoint(0xEA86);
+
+    /// <summary>A shield, for privacy and protection.</summary>
+    public static Glyph Shield { get; } = FromCodepoint(0xEA18);
+
+    /// <summary>A padlock, for what's locked or managed by someone else.</summary>
+    public static Glyph Lock { get; } = FromCodepoint(0xE72E);
+
+    /// <summary>A camera, for the webcam.</summary>
+    public static Glyph Camera { get; } = FromCodepoint(0xE722);
+
+    /// <summary>A microphone.</summary>
+    public static Glyph Microphone { get; } = FromCodepoint(0xE720);
+
+    /// <summary>A map pin, for location.</summary>
+    public static Glyph MapPin { get; } = FromCodepoint(0xE707);
+
+    /// <summary>A price tag, for advertising and labels.</summary>
+    public static Glyph Tag { get; } = FromCodepoint(0xE8EC);
+
+    /// <summary>A megaphone, for promotions and announcements.</summary>
+    public static Glyph Megaphone { get; } = FromCodepoint(0xE789);
+
+    /// <summary>A light bulb, for tips and suggestions.</summary>
+    public static Glyph Lightbulb { get; } = FromCodepoint(0xEA80);
+
+    /// <summary>An eye, for what's seen or watched.</summary>
+    public static Glyph View { get; } = FromCodepoint(0xE890);
+
+    /// <summary>A bell, for alerts.</summary>
+    public static Glyph Bell { get; } = FromCodepoint(0xEA8F);
+
+    /// <summary>A briefcase, for work and organizations.</summary>
+    public static Glyph Work { get; } = FromCodepoint(0xE821);
+
+    /// <summary>A certificate, for trust and certificates.</summary>
+    public static Glyph Certificate { get; } = FromCodepoint(0xEB95);
+
+    /// <summary>A person, for accounts and people.</summary>
+    public static Glyph Person { get; } = FromCodepoint(0xE77B);
+
+    /// <summary>A person with a shield, for administrators and what they manage.</summary>
+    public static Glyph Admin { get; } = FromCodepoint(0xE7EF);
+
+    /// <summary>An arrow curving back, for undoing.</summary>
+    public static Glyph Undo { get; } = FromCodepoint(0xE7A7);
 }

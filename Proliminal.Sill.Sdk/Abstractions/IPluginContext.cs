@@ -32,6 +32,15 @@ public interface IPluginContext
     public void SetPage(Glyph icon, PageCategory category, string description, Action<PageBuilder> build);
 
     /// <summary>
+    ///     Adds cards to the top of <paramref name="category"/>'s page, above the links to its pages, such as a
+    ///     <see cref="Pages.Abstractions.CardsBuilder{TSelf}.Score"/> of what its pages set. Headers of several plugins are
+    ///     shown in the order the plugins started.
+    /// </summary>
+    /// <param name="category">The category whose page gets the cards.</param>
+    /// <param name="build">Describes the cards, as for a page.</param>
+    public void SetCategoryHeader(PageCategory category, Action<PageBuilder> build);
+
+    /// <summary>
     ///     Adds a tile to the quick menu that opens from the tray icon. <paramref name="run"/> is called on the UI
     ///     thread once the menu has closed; if it throws, Sill shows the error as a notification.
     /// </summary>

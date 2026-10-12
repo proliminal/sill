@@ -250,6 +250,33 @@ public abstract class CardsBuilder<TSelf>
     }
 
     /// <summary>
+    ///     Adds a large card with a score as a ring that fills and colors from red to green, as Windows Settings shows
+    ///     its own, with the recommendations that raise it. Usually the first thing on a page, or a category's header.
+    /// </summary>
+    /// <example>
+    ///     <code>
+    ///     .Score("Setup score", score, card => card
+    ///         .Status(score.Map(value => value >= 0.6 ? "Good" : "Fair"))
+    ///         .Description("How much of the recommended setup is done.")
+    ///         .Recommendations(open)
+    ///         .ApplyAll("Apply all", ApplyAllAsync))
+    ///     </code>
+    /// </example>
+    /// <param name="title">The card's title, such as <c>Privacy score</c>.</param>
+    /// <param name="value">The score, from 0 to 1.</param>
+    /// <param name="build">Sets the card's grade, description, colors, recommendations and buttons.</param>
+    public TSelf Score(string title, IReadOnlyValue<double> value, Action<ScoreBuilder>? build = null)
+    {
+        ArgumentNullException.ThrowIfNull(value);
+
+        var builder = new ScoreBuilder(title);
+        build?.Invoke(builder);
+
+        Add(builder.Build(value));
+        return Self;
+    }
+
+    /// <summary>
     ///     Adds a compact card per item of <paramref name="items"/>, which follow it as it changes, such as the folders
     ///     on <c>PATH</c>. Each row can have small icon buttons that act on its item.
     /// </summary>
