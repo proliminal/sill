@@ -8,6 +8,8 @@ A small Windows tray app with keyboard shortcuts and switches for everyday tasks
 
 | | |
 | --- | --- |
+| 🔒 **Privacy** | Turn off what your account shares with Microsoft and advertisers in one go, and keep it off after updates. |
+| 🛡️ **Security** | What Windows Security doesn't tell you: protection left off, antivirus still listed after it's gone, and what starts with Windows, signed or not. |
 | 🖼️ **Image path** | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>P</kbd> turns the image or file on your clipboard into a path. |
 | 💻 **Windows Terminal** | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>T</kbd> brings Terminal to the front, plus opacity, window and title bar colors. |
 | ⚡ **PowerShell** | One-click PowerShell 7 with autocomplete, file icons, an oh-my-posh prompt and a Visual Studio dev shell. |

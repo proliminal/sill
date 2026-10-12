@@ -21,6 +21,12 @@ public sealed class PageCategory
     public static PageCategory Privacy { get; } = new("Privacy");
 
     /// <summary>
+    ///     How well Windows Security and the PC protect the account, what Windows Security doesn't say, and what starts
+    ///     with the account. Pages here only change settings of the signed-in account; the PC's they show.
+    /// </summary>
+    public static PageCategory Security { get; } = new("Security");
+
+    /// <summary>
     ///     Sill's own plugin pages: its plugins, the ones from the plugins folder, and the plugin documentation. Only Sill
     ///     puts pages here.
     /// </summary>

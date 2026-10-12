@@ -200,4 +200,37 @@ public readonly record struct Glyph
 
     /// <summary>An arrow curving back, for undoing.</summary>
     public static Glyph Undo { get; } = FromCodepoint(0xE7A7);
+
+    /// <summary>A shield with a stripe, Windows Security's own, for security and antivirus.</summary>
+    public static Glyph Defender { get; } = FromCodepoint(0xE83D);
+
+    /// <summary>A laptop with a shield, for the protection built into the PC itself.</summary>
+    public static Glyph DeviceSecurity { get; } = FromCodepoint(0xF552);
+
+    /// <summary>A bug, for threats and malware.</summary>
+    public static Glyph Bug { get; } = FromCodepoint(0xEBE8);
+
+    /// <summary>A hard drive, for disks and drives.</summary>
+    public static Glyph HardDrive { get; } = FromCodepoint(0xEDA2);
+
+    /// <summary>A network, for firewalls and connections.</summary>
+    public static Glyph Network { get; } = FromCodepoint(0xE968);
+
+    /// <summary>A fingerprint, for signing in.</summary>
+    public static Glyph Fingerprint { get; } = FromCodepoint(0xE928);
+
+    /// <summary>A key, for signatures, passwords and credentials.</summary>
+    public static Glyph Key { get; } = FromCodepoint(0xE8D7);
+
+    /// <summary>An open padlock, for what's unprotected.</summary>
+    public static Glyph Unlock { get; } = FromCodepoint(0xE785);
+
+    /// <summary>A lightning bolt, for what starts by itself.</summary>
+    public static Glyph Lightning { get; } = FromCodepoint(0xE945);
+
+    /// <summary>A check mark in a circle, for what's fine.</summary>
+    public static Glyph Completed { get; } = FromCodepoint(0xE930);
+
+    /// <summary>An exclamation mark in a circle, for what needs attention.</summary>
+    public static Glyph Error { get; } = FromCodepoint(0xE783);
 }
