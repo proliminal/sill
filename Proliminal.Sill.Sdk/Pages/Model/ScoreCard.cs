@@ -11,7 +11,8 @@ namespace Proliminal.Sill.Sdk.Pages.Model;
 public sealed class ScoreCard : CardElement
 {
     internal ScoreCard(CardInfo info, IReadOnlyValue<double> value, Func<double, string> format, double good, double fair,
-        IReadOnlyValue<IReadOnlyList<ScoreRecommendation>>? recommendations, string? applyAllLabel, PluginAction? applyAll)
+        IReadOnlyValue<IReadOnlyList<ScoreRecommendation>>? recommendations, string? applyAllLabel, PluginAction? applyAll,
+        IReadOnlyValue<string?>? grade = null)
         : base(info)
     {
         Value = value;
@@ -21,6 +22,7 @@ public sealed class ScoreCard : CardElement
         Recommendations = recommendations;
         ApplyAllLabel = applyAllLabel;
         ApplyAll = applyAll;
+        Grade = grade;
     }
 
     /// <summary>The score, from 0 to 1.</summary>
@@ -38,6 +40,9 @@ public sealed class ScoreCard : CardElement
     /// <summary>What would raise the score, if listed.</summary>
     public IReadOnlyValue<IReadOnlyList<ScoreRecommendation>>? Recommendations { get; }
 
+    /// <summary>A word for the score, such as <c>Good</c>, shown in bold before the status, if set.</summary>
+    public IReadOnlyValue<string?>? Grade { get; }
+
     /// <summary>The prominent button's text, if it has one.</summary>
     public string? ApplyAllLabel { get; }
 
@@ -53,5 +58,8 @@ public sealed class ScoreCard : CardElement
 
         if (Recommendations is not null)
             yield return Recommendations;
+
+        if (Grade is not null)
+            yield return Grade;
     }
 }

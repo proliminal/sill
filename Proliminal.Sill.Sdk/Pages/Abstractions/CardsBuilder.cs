@@ -301,7 +301,8 @@ public abstract class CardsBuilder<TSelf>
     /// <example>
     ///     <code>
     ///     .Score("Setup score", score, card => card
-    ///         .Status(score.Map(value => value >= 0.6 ? "Good" : "Fair"))
+    ///         .Grade(score.Map&lt;double, string?&gt;(value => value >= 0.6 ? "Good" : "Fair"))
+    ///         .Status(done.Map&lt;int, string?&gt;(count => $"{count} of 5 steps done"))
     ///         .Description("How much of the recommended setup is done.")
     ///         .Recommendations(open)
     ///         .ApplyAll("Apply all", ApplyAllAsync))

@@ -7,8 +7,8 @@ namespace Proliminal.Sill.Sdk.Pages;
 
 /// <summary>
 ///     Sets up a score card: what its ring says, when it turns from red to yellow to green, and the recommendations that
-///     raise it. See <see cref="CardsBuilder{TSelf}.Score"/>. The card's <see cref="CardBuilder{TSelf}.Status"/> is shown
-///     under its title, as a grade such as <c>Good</c>, and its description under that.
+///     raise it. See <see cref="CardsBuilder{TSelf}.Score"/>. Its <see cref="Grade"/> is shown in bold under its title,
+///     followed by its <see cref="CardBuilder{TSelf}.Status"/>, and its description under that.
 /// </summary>
 public sealed class ScoreBuilder : CardBuilder<ScoreBuilder>
 {
@@ -17,6 +17,7 @@ public sealed class ScoreBuilder : CardBuilder<ScoreBuilder>
     private double _fair = 0.3;
     private IReadOnlyValue<IReadOnlyList<ScoreRecommendation>>? _recommendations;
     private (string Label, PluginAction OnClick)? _applyAll;
+    private IReadOnlyValue<string?>? _grade;
 
     internal ScoreBuilder(string title)
         : base(title)
@@ -30,6 +31,17 @@ public sealed class ScoreBuilder : CardBuilder<ScoreBuilder>
     public ScoreBuilder Format(Func<double, string> format)
     {
         _format = format ?? throw new ArgumentNullException(nameof(format));
+        return this;
+    }
+
+    /// <summary>
+    ///     Sets a word for the score, such as <c>Good</c>, shown in bold before the status, so it reads as the score's
+    ///     grade rather than as part of a sentence.
+    /// </summary>
+    /// <param name="grade">The grade, or <see langword="null"/> or empty for none.</param>
+    public ScoreBuilder Grade(IReadOnlyValue<string?> grade)
+    {
+        _grade = grade ?? throw new ArgumentNullException(nameof(grade));
         return this;
     }
 
@@ -91,5 +103,5 @@ public sealed class ScoreBuilder : CardBuilder<ScoreBuilder>
     }
 
     internal ScoreCard Build(IReadOnlyValue<double> value)
-        => new(Info, value, _format, _good, _fair, _recommendations, _applyAll?.Label, _applyAll?.OnClick);
+        => new(Info, value, _format, _good, _fair, _recommendations, _applyAll?.Label, _applyAll?.OnClick, _grade);
 }
