@@ -17,6 +17,7 @@ public abstract class CardElement : PageElement
         Icon = info.Icon;
         EnabledWhen = info.EnabledWhen;
         Status = info.Status;
+        Details = info.Details;
         Actions = info.Actions;
     }
 
@@ -38,6 +39,9 @@ public abstract class CardElement : PageElement
     /// <summary>Extra buttons left of the control, in order.</summary>
     public IReadOnlyList<CardAction> Actions { get; }
 
+    /// <summary>Lines inside the card under its description, if any.</summary>
+    public IReadOnlyValue<IReadOnlyList<CardDetail>>? Details { get; }
+
     internal override IEnumerable<IReadOnlyValue> GetValues()
     {
         foreach (var value in base.GetValues())
@@ -51,6 +55,9 @@ public abstract class CardElement : PageElement
 
         if (Status is not null)
             yield return Status;
+
+        if (Details is not null)
+            yield return Details;
 
         foreach (var action in Actions)
         {

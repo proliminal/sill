@@ -15,6 +15,18 @@ public sealed class PageCategory
     public static PageCategory Command { get; } = new("Command");
 
     /// <summary>
+    ///     What your account shares, which apps use your camera, microphone and location, and what the PC's owner manages.
+    ///     Pages here only change settings of the signed-in account, never those of the PC or its organization.
+    /// </summary>
+    public static PageCategory Privacy { get; } = new("Privacy");
+
+    /// <summary>
+    ///     How well Windows Security and the PC protect the account, what Windows Security doesn't say, and what starts
+    ///     with the account. Pages here only change settings of the signed-in account; the PC's they show.
+    /// </summary>
+    public static PageCategory Security { get; } = new("Security");
+
+    /// <summary>
     ///     Sill's own plugin pages: its plugins, the ones from the plugins folder, and the plugin documentation. Only Sill
     ///     puts pages here.
     /// </summary>

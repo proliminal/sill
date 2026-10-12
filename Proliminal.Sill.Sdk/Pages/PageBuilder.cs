@@ -55,6 +55,39 @@ public sealed class PageBuilder : CardsBuilder<PageBuilder>
         return this;
     }
 
+    /// <summary>
+    ///     Adds a timeline of <paramref name="items"/>, which follows it as it changes: newest first under a heading per
+    ///     day, with the time of each, and what's still going on above it. It has its own headings, so it's usually the
+    ///     only thing on a subpage.
+    /// </summary>
+    /// <example>
+    ///     <code>
+    ///     .Timeline(events, item => item.At, item => item.Title, timeline => timeline
+    ///         .Text(item => item.Text)
+    ///         .Tag(item => item.Area)
+    ///         .Icon(item => item.IsWarning ? Glyph.Warning : null)
+    ///         .Tone(item => item.IsWarning ? Tone.Caution : Tone.Neutral)
+    ///         .Empty("Nothing happened yet."))
+    ///     </code>
+    /// </example>
+    /// <typeparam name="T">The type of the items.</typeparam>
+    /// <param name="items">The items, in any order.</param>
+    /// <param name="at">When an item happened or started, in local time.</param>
+    /// <param name="title">What happened.</param>
+    /// <param name="build">Sets the items' text, tags, icons, tones and details, and which last.</param>
+    public PageBuilder Timeline<T>(IReadOnlyValue<IReadOnlyList<T>> items, Func<T, DateTime> at, Func<T, string> title, Action<TimelineBuilder<T>>? build = null)
+    {
+        ArgumentNullException.ThrowIfNull(items);
+        ArgumentNullException.ThrowIfNull(at);
+        ArgumentNullException.ThrowIfNull(title);
+
+        var builder = new TimelineBuilder<T>();
+        build?.Invoke(builder);
+
+        _elements.Add(builder.Build(items, at, title));
+        return this;
+    }
+
     private protected override void Add(PageElement element)
         => _elements.Add(element);
 
