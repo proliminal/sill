@@ -1,7 +1,12 @@
-<h1 align="center">Proliminal Sill</h1>
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/brand/sill-banner-dark@2x.png">
+    <img src="docs/brand/sill-banner-light@2x.png" alt="Sill. Your PC, on your terms. The cornerstone of a private, secure and personal device." width="100%">
+  </picture>
+</p>
 
 <p align="center">
-  A small Windows tray app that keeps your PC private, secure and the way you like it,<br>
+  Privacy, security and personalization for Windows 10 and 11,<br>
   with keyboard shortcuts and one-click switches for everyday tasks.
 </p>
 
