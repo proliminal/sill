@@ -111,4 +111,40 @@ public interface IPluginContext
     /// </remarks>
     /// <param name="work">What to do on the UI thread.</param>
     public void Post(Action work);
+
+    /// <summary>
+    ///     Notes something on Sill noticed's timeline, under the plugin's name: something the plugin noticed or did on its
+    ///     own, such as a setting it put back. It's kept on this PC for 90 days, also when notifications are off. Can be
+    ///     called from any thread, at any time.
+    /// </summary>
+    /// <param name="title">What happened, as a short sentence.</param>
+    /// <param name="text">More about it, or empty.</param>
+    /// <param name="isWarning">Whether it left the PC or account less protected, rather than being dealt with.</param>
+    public void Note(string title, string text, bool isWarning = false);
+
+    /// <summary>
+    ///     Adds a recommendation to the Privacy or Security score, for a setting of the user's own account that the plugin
+    ///     changes: the score counts it, and applies it with the others on Apply all. It's taken out when the plugin is
+    ///     turned off. When the plugin changes what it's about itself, as with a switch on its page, call
+    ///     <see cref="ScoresChanged"/>.
+    /// </summary>
+    /// <param name="category"><see cref="PageCategory.Privacy"/> or <see cref="PageCategory.Security"/>.</param>
+    /// <param name="title">What it is, such as <c>Hide my recent files</c>.</param>
+    /// <param name="actionLabel">The button that applies it, such as <c>Turn on</c>.</param>
+    /// <param name="isApplied">Whether it's applied now. Called whenever a score is shown, on the UI thread, so keep it quick.</param>
+    /// <param name="apply">Applies it, on the UI thread. What it throws is shown as the reason it wasn't applied.</param>
+    public void AddRecommendation(PageCategory category, string title, string actionLabel, Func<bool> isApplied, Action apply);
+
+    /// <summary>
+    ///     Says what a recommendation of the plugin's is about changed, so the scores are read again. Call on the UI thread.
+    /// </summary>
+    public void ScoresChanged();
+
+    /// <summary>
+    ///     Shows <paramref name="problem"/> on Home, among what needs the user, with a link to the plugin's page; with
+    ///     <see langword="null"/> it's gone again. For something the user can fix that keeps the plugin from working,
+    ///     such as a program it needs that isn't installed. Can be called from any thread, at any time.
+    /// </summary>
+    /// <param name="problem">What's wrong and how to fix it, as a sentence or two; <see langword="null"/> when nothing is.</param>
+    public void ReportProblem(string? problem);
 }

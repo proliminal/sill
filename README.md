@@ -51,7 +51,18 @@ needs no administrator, and nothing it reads leaves your PC.
 </table>
 
 **Sill noticed** keeps a timeline of what changed on its own: sharing that came back on, protection that turned off,
-apps that added themselves to startup.
+apps that added themselves to startup, and settings Sill applied that something else changed back.
+
+<br>
+
+## 🔑 A password manager that stays on your PC
+
+Your logins in one encrypted file on this PC, never synced or sent anywhere. Unlock it with a master password or
+Windows Hello, optionally on a secure desktop that other apps can't watch. Press
+<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>L</kbd> over any app to fill in a login or copy it; copies stay out
+of clipboard history and are cleared after a while. It shows weak and reused passwords, makes two-factor codes, and
+imports from your browser, Bitwarden, 1Password and KeePass. From a terminal, `sill pass get <name> --clip` copies a
+password once you allow it.
 
 <br>
 
@@ -87,6 +98,17 @@ between looks from the quick menu, or put on the built-in **Presenting** look be
 
 <br>
 
+## 🧰 Developer tools
+
+Small tools for code and data, all working on your PC only: **Encoding** (Base64, URL, HTML, Punycode and more),
+**Hashing** of text and files, **Generators** for GUIDs, passwords and keys, **Date and time**, **Numbers** in every
+base, **Color** formats and contrast, **Text** case and cleanup, **Format** for JSON, XML and YAML, **Regex** with its
+matches and groups, and **JWT** decoding. Most also work on what's on the clipboard, from the quick menu.
+
+Sill can also opt you out of the usage data that tools like the .NET SDK, PowerShell, the Azure CLI and Next.js send.
+
+<br>
+
 ## ⚡ Everyday shortcuts
 
 <table>
@@ -107,10 +129,12 @@ between looks from the quick menu, or put on the built-in **Presenting** look be
 | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>P</kbd> | Copy the clipboard's image as a path |
 | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>T</kbd> | Bring Windows Terminal to the front |
 | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>E</kbd> | Open Terminal in the File Explorer folder in front |
+| <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>L</kbd> | Find a password, to fill it in or copy it |
 
-Every shortcut can be changed. Moving to another PC? Export your setup to a file and import it there; you see every
-change before anything is changed. From a terminal, `sill setup export|import <file>` does the same, and
-`sill setting list|get|set|reset` reaches every option.
+Every shortcut can be changed, and every quick action, and every look, can get one of its own. Moving to another PC?
+Export your setup to a file, looks included, and import it there; you see every change before anything is changed.
+From a terminal, `sill setup export|import <file>` does the same, `sill setting list|get|set` reaches every option on
+Sill's pages, and `sill look apply <name>` switches looks.
 
 <br>
 
@@ -127,8 +151,12 @@ change before anything is changed. From a terminal, `sill setup export|import <f
   </tr>
 </table>
 
-Plugins are .NET class libraries built on the SDK in this repository. They get their own page in Sill, quick actions
-and shortcuts. Issues and pull requests for the SDK are welcome.
+Plugins are .NET class libraries built on the SDK in this repository. A plugin describes its page and Sill draws it,
+so it looks like the rest of Sill and is found by search. Its options can be changed with `sill setting` and go along
+in an exported setup. It can add quick actions, which users can give a shortcut, and recommendations to the privacy or
+security score. It can also note what it did in Sill noticed, and show on Home what keeps it from working. Each plugin
+is loaded apart from Sill and from other plugins: it gets the SDK and .NET from Sill, and brings everything else
+itself. Issues and pull requests for the SDK are welcome.
 
 ---
 

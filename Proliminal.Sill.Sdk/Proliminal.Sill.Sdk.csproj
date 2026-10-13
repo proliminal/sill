@@ -11,6 +11,9 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <!-- Only the SDK is open source; Sill itself isn't. -->
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <!-- Raise the minor with each release that adds to the SDK: Sill doesn't load a plugin built against a newer SDK
+         than its own, which would fail on what's missing. A major change breaks every plugin, and isn't planned. -->
+    <Version>1.1.0</Version>
   </PropertyGroup>
 
   <!-- Sill builds the page models plugins describe; plugins only get the builders. -->
