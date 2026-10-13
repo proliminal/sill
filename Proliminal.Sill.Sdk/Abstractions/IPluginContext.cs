@@ -4,7 +4,8 @@ namespace Proliminal.Sill.Sdk.Abstractions;
 
 /// <summary>
 ///     What Sill offers a plugin while it's configured. Call its members on the UI thread, from
-///     <see cref="IPlugin.Configure"/>; <see cref="Notify"/> can also be called later.
+///     <see cref="IPlugin.Configure"/>; <see cref="Notify"/>, <see cref="Post"/> and <see cref="Log"/> can also be used
+///     later, from any thread.
 /// </summary>
 public interface IPluginContext
 {
@@ -12,6 +13,11 @@ public interface IPluginContext
     ///     The plugin being configured.
     /// </summary>
     public PluginInfo Info { get; }
+
+    /// <summary>
+    ///     Sill's log, for what the plugin did and what failed. Keep it and use it from any thread, at any time.
+    /// </summary>
+    public IPluginLog Log { get; }
 
     /// <summary>
     ///     Gives the plugin a page in the settings window's navigation bar, titled with its name. <paramref name="build"/>
@@ -92,4 +98,17 @@ public interface IPluginContext
     /// <param name="text">The notification's text.</param>
     /// <param name="kind">The icon shown with it.</param>
     public void Notify(string title, string text, NotificationKind kind = NotificationKind.None);
+
+    /// <summary>
+    ///     Runs <paramref name="work"/> on Sill's UI thread, soon after this returns. Can be called from any thread, at
+    ///     any time, such as from a thread or timer the plugin started itself to update a <see cref="State{T}"/> its page
+    ///     shows.
+    /// </summary>
+    /// <remarks>
+    ///     If <paramref name="work"/> throws, Sill logs the error and shows it as a notification, and keeps running. An
+    ///     exception that escapes a plugin's own thread can't be caught that way: it ends Sill. Work posted before the
+    ///     plugin was turned off doesn't run.
+    /// </remarks>
+    /// <param name="work">What to do on the UI thread.</param>
+    public void Post(Action work);
 }
