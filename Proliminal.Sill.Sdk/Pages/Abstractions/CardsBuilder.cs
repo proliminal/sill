@@ -203,6 +203,34 @@ public abstract class CardsBuilder<TSelf>
     }
 
     /// <summary>
+    ///     Adds a card with a box for text of several lines, under its description and as wide as the card. The value
+    ///     changes when the box loses focus, not while typing; Esc puts back what it was.
+    /// </summary>
+    /// <example>
+    ///     <code>
+    ///     .TextArea("Ignored folders", ignoredFolders, text => text
+    ///         .Icon(Glyph.Folder)
+    ///         .Description("One per line. These aren't searched.")
+    ///         .Placeholder(@"C:\Windows")
+    ///         .Lines(6)
+    ///         .Monospace())
+    ///     </code>
+    /// </example>
+    /// <param name="title">The card's title.</param>
+    /// <param name="value">The text, with lines separated by <c>\n</c>.</param>
+    /// <param name="build">Sets the card's icon, description, conditions, placeholder, height, limit and font.</param>
+    public TSelf TextArea(string title, IValue<string> value, Action<TextAreaBuilder>? build = null)
+    {
+        ArgumentNullException.ThrowIfNull(value);
+
+        var builder = new TextAreaBuilder(title);
+        build?.Invoke(builder);
+
+        Add(builder.Build(value));
+        return Self;
+    }
+
+    /// <summary>
     ///     Adds a card with a keyboard shortcut, changed by clicking it and pressing the new keys. Only for Sill's own
     ///     pages, as plugins can't register shortcuts yet.
     /// </summary>
