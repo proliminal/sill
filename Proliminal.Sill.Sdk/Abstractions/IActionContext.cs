@@ -44,4 +44,12 @@ public interface IActionContext
     /// </summary>
     /// <param name="text">The text, which can't be empty.</param>
     public void SetClipboardText(string text);
+
+    /// <summary>
+    ///     Copies a secret, such as a password, a key or a token: Windows leaves it out of clipboard history and doesn't
+    ///     sync it to the user's other devices, and Sill clears it after a while, as long as the user set for copied
+    ///     passwords, unless something else was copied since. Other apps can still read it while it's on the clipboard.
+    /// </summary>
+    /// <param name="text">The secret; not empty.</param>
+    public void SetSecretClipboardText(string text);
 }
