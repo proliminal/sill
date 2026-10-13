@@ -12,11 +12,17 @@ namespace Proliminal.Sill.Sdk.Pages.Model;
 [EditorBrowsable(EditorBrowsableState.Never)]
 public sealed class PageModel
 {
-    internal PageModel(IReadOnlyList<PageElement> elements)
-        => Elements = elements;
+    internal PageModel(IReadOnlyList<PageElement> elements, IReadOnlyList<string> keywords)
+    {
+        Elements = elements;
+        Keywords = keywords;
+    }
 
     /// <summary>The page's elements, from top to bottom.</summary>
     public IReadOnlyList<PageElement> Elements { get; }
+
+    /// <summary>Other words people search for the page by, besides its title and what's on it.</summary>
+    public IReadOnlyList<string> Keywords { get; }
 
     /// <summary>
     ///     Every value on the page, including the conditions cards are shown and enabled on, to refresh them together.

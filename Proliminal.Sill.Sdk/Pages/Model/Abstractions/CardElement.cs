@@ -17,8 +17,10 @@ public abstract class CardElement : PageElement
         Icon = info.Icon;
         EnabledWhen = info.EnabledWhen;
         Status = info.Status;
+        StatusTone = info.StatusTone;
         Details = info.Details;
         Actions = info.Actions;
+        Keywords = info.Keywords;
     }
 
     /// <summary>The card's title.</summary>
@@ -36,8 +38,14 @@ public abstract class CardElement : PageElement
     /// <summary>Text left of the control, such as <c>Installed</c>, if any. It's hidden while it's empty.</summary>
     public IReadOnlyValue<string?>? Status { get; }
 
+    /// <summary>The color of <see cref="Status"/>, or the usual status color when it's <see langword="null"/>.</summary>
+    public IReadOnlyValue<Tone>? StatusTone { get; }
+
     /// <summary>Extra buttons left of the control, in order.</summary>
     public IReadOnlyList<CardAction> Actions { get; }
+
+    /// <summary>Other words people search for the card by, besides its title and description.</summary>
+    public IReadOnlyList<string> Keywords { get; }
 
     /// <summary>Lines inside the card under its description, if any.</summary>
     public IReadOnlyValue<IReadOnlyList<CardDetail>>? Details { get; }
@@ -55,6 +63,9 @@ public abstract class CardElement : PageElement
 
         if (Status is not null)
             yield return Status;
+
+        if (StatusTone is not null)
+            yield return StatusTone;
 
         if (Details is not null)
             yield return Details;

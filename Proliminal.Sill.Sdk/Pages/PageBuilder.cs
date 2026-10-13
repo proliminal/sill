@@ -21,6 +21,7 @@ namespace Proliminal.Sill.Sdk.Pages;
 public sealed class PageBuilder : CardsBuilder<PageBuilder>
 {
     private readonly List<PageElement> _elements = [];
+    private readonly List<string> _keywords = [];
 
     private PageBuilder()
     {
@@ -35,6 +36,24 @@ public sealed class PageBuilder : CardsBuilder<PageBuilder>
         ArgumentException.ThrowIfNullOrWhiteSpace(text);
 
         _elements.Add(new IntroElement(text));
+        return this;
+    }
+
+    /// <summary>
+    ///     Adds words people may search Sill for to find this page, besides its title, description and the titles and
+    ///     descriptions of its cards, which are found already: other names for what it does, or the names of what it
+    ///     works with. For a word that belongs to one card, use that card's
+    ///     <see cref="Abstractions.CardBuilder{TSelf}.Keywords"/>, so the page opens with the card in view.
+    /// </summary>
+    /// <example>
+    ///     <code>
+    ///     .Keywords("base64", "url encode", "percent-encoding")
+    ///     </code>
+    /// </example>
+    /// <param name="keywords">A word or a few, each; case doesn't matter.</param>
+    public PageBuilder Keywords(params string[] keywords)
+    {
+        Keyword.AddTo(_keywords, keywords);
         return this;
     }
 
@@ -101,6 +120,6 @@ public sealed class PageBuilder : CardsBuilder<PageBuilder>
         var builder = new PageBuilder();
         build(builder);
 
-        return new PageModel(builder._elements.ToArray());
+        return new PageModel(builder._elements.ToArray(), builder._keywords.ToArray());
     }
 }

@@ -16,8 +16,10 @@ public abstract class CardBuilder<TSelf>
     private IReadOnlyValue<bool>? _visibleWhen;
     private IReadOnlyValue<bool>? _enabledWhen;
     private IReadOnlyValue<string?>? _status;
+    private IReadOnlyValue<Tone>? _statusTone;
     private readonly List<CardAction> _actions = [];
     private IReadOnlyValue<IReadOnlyList<CardDetail>>? _details;
+    private readonly List<string> _keywords = [];
 
     private protected CardBuilder(string title)
     {
@@ -26,11 +28,11 @@ public abstract class CardBuilder<TSelf>
         _title = title;
     }
 
-    private TSelf Self
+    private protected TSelf Self
         => (TSelf)this;
 
     internal CardInfo Info
-        => new(_title, _description, _icon, _visibleWhen, _enabledWhen, _status, _actions.ToArray(), _details);
+        => new(_title, _description, _icon, _visibleWhen, _enabledWhen, _status, _statusTone, _actions.ToArray(), _details, _keywords.ToArray());
 
     /// <summary>
     ///     Shows <paramref name="icon"/> left of the title. Cards without one leave the space out.
@@ -72,10 +74,31 @@ public abstract class CardBuilder<TSelf>
     ///     Shows <paramref name="status"/> left of the control, such as <c>Installed</c> or <c>Installing…</c>. It's hidden
     ///     while it's <see langword="null"/> or empty.
     /// </summary>
-    /// <param name="status">A word or two.</param>
+    /// <param name="status">A few words, such as what's wrong with what was typed.</param>
     public TSelf Status(IReadOnlyValue<string?> status)
     {
         _status = status ?? throw new ArgumentNullException(nameof(status));
+        return Self;
+    }
+
+    /// <summary>
+    ///     Shows <paramref name="status"/> left of the control in the color of <paramref name="tone"/>, such as a green
+    ///     <c>Matches</c> or a red <c>Doesn't match</c>. The words should say it too, as not everyone tells colors apart.
+    /// </summary>
+    /// <example>
+    ///     <code>
+    ///     .Status(match.Map(result => result.Text), match.Map(result => result.IsRight ? Tone.Good : Tone.Critical))
+    ///     </code>
+    /// </example>
+    /// <param name="status">A few words, such as what's wrong with what was typed.</param>
+    /// <param name="tone">Its color; <see cref="Tone.Neutral"/> is the usual status color.</param>
+    public TSelf Status(IReadOnlyValue<string?> status, IReadOnlyValue<Tone> tone)
+    {
+        ArgumentNullException.ThrowIfNull(status);
+        ArgumentNullException.ThrowIfNull(tone);
+
+        _status = status;
+        _statusTone = tone;
         return Self;
     }
 
@@ -137,6 +160,23 @@ public abstract class CardBuilder<TSelf>
             onClick(context);
             return Task.CompletedTask;
         }, build);
+    }
+
+    /// <summary>
+    ///     Adds words people may search Sill for to find this card, besides its title and description, such as other
+    ///     names for what it does. The card's page opens with the card in view.
+    /// </summary>
+    /// <example>
+    ///     <code>
+    ///     .Button("Empty Recycle Bin", "Empty", EmptyAsync, button => button
+    ///         .Keywords("trash", "delete files"))
+    ///     </code>
+    /// </example>
+    /// <param name="keywords">A word or a few, each; case doesn't matter.</param>
+    public TSelf Keywords(params string[] keywords)
+    {
+        Keyword.AddTo(_keywords, keywords);
+        return Self;
     }
 
     /// <summary>

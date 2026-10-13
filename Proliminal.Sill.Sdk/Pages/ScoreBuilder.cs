@@ -8,7 +8,7 @@ namespace Proliminal.Sill.Sdk.Pages;
 /// <summary>
 ///     Sets up a score card: what its ring says, when it turns from red to yellow to green, and the recommendations that
 ///     raise it. See <see cref="CardsBuilder{TSelf}.Score"/>. Its <see cref="Grade"/> is shown in bold under its title,
-///     followed by its <see cref="CardBuilder{TSelf}.Status"/>, and its description under that.
+///     followed by its <see cref="CardBuilder{TSelf}.Status(IReadOnlyValue{string?})"/>, and its description under that.
 /// </summary>
 public sealed class ScoreBuilder : CardBuilder<ScoreBuilder>
 {

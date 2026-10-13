@@ -204,7 +204,9 @@ public abstract class CardsBuilder<TSelf>
 
     /// <summary>
     ///     Adds a card with a box for text of several lines, under its description and as wide as the card. The value
-    ///     changes when the box loses focus, not while typing; Esc puts back what it was.
+    ///     changes when the box loses focus, not while typing, and Esc puts back what it was; see
+    ///     <see cref="TextCardBuilder{TSelf}.WhileTyping"/> for a box whose value changes with each key, and
+    ///     the overload that takes an <see cref="IReadOnlyValue{T}"/> for one that only shows a result.
     /// </summary>
     /// <example>
     ///     <code>
@@ -218,12 +220,90 @@ public abstract class CardsBuilder<TSelf>
     /// </example>
     /// <param name="title">The card's title.</param>
     /// <param name="value">The text, with lines separated by <c>\n</c>.</param>
-    /// <param name="build">Sets the card's icon, description, conditions, placeholder, height, limit and font.</param>
+    /// <param name="build">
+    ///     Sets the card's icon, description, conditions, placeholder, height, limit and font, and whether it changes
+    ///     while typing or is read-only.
+    /// </param>
     public TSelf TextArea(string title, IValue<string> value, Action<TextAreaBuilder>? build = null)
     {
         ArgumentNullException.ThrowIfNull(value);
 
         var builder = new TextAreaBuilder(title);
+        build?.Invoke(builder);
+
+        Add(builder.Build(value));
+        return Self;
+    }
+
+    /// <summary>
+    ///     Adds a card with a box that only shows <paramref name="value"/>, to select and copy, such as a result worked
+    ///     out from what's typed elsewhere on the page. See
+    ///     <see cref="TextArea(string, IValue{string}, Action{TextAreaBuilder}?)"/>.
+    /// </summary>
+    /// <example>
+    ///     <code>
+    ///     .TextArea("Hash", text.Map(Hash), hash => hash
+    ///         .Monospace()
+    ///         .Action("Copy", action => action.SetClipboardText(Hash(text.Value))))
+    ///     </code>
+    /// </example>
+    /// <param name="title">The card's title.</param>
+    /// <param name="value">The text, with lines separated by <c>\n</c>.</param>
+    /// <param name="build">Sets the card's icon, description, conditions, placeholder, height, limit and font.</param>
+    public TSelf TextArea(string title, IReadOnlyValue<string> value, Action<TextAreaBuilder>? build = null)
+    {
+        ArgumentNullException.ThrowIfNull(value);
+
+        var builder = new TextAreaBuilder(title);
+        build?.Invoke(builder);
+
+        Add(builder.Build(value));
+        return Self;
+    }
+
+    /// <summary>
+    ///     Adds a card with a box for one line of text, under its description and as wide as the card, such as a search
+    ///     or a pattern. It changes as a <see cref="TextArea(string, IValue{string}, Action{TextAreaBuilder}?)"/>
+    ///     does: when the box loses focus, or with <see cref="TextCardBuilder{TSelf}.WhileTyping"/> with each key.
+    /// </summary>
+    /// <example>
+    ///     <code>
+    ///     .TextBox("Pattern", pattern, text => text
+    ///         .Icon(Glyph.Search)
+    ///         .Placeholder(@"^\d+$")
+    ///         .Monospace()
+    ///         .WhileTyping())
+    ///     </code>
+    /// </example>
+    /// <param name="title">The card's title.</param>
+    /// <param name="value">The text, without line breaks.</param>
+    /// <param name="build">
+    ///     Sets the card's icon, description, conditions, placeholder, limit and font, and whether it changes while
+    ///     typing or is read-only.
+    /// </param>
+    public TSelf TextBox(string title, IValue<string> value, Action<TextBoxBuilder>? build = null)
+    {
+        ArgumentNullException.ThrowIfNull(value);
+
+        var builder = new TextBoxBuilder(title);
+        build?.Invoke(builder);
+
+        Add(builder.Build(value));
+        return Self;
+    }
+
+    /// <summary>
+    ///     Adds a card with a box of one line that only shows <paramref name="value"/>, to select and copy. See
+    ///     <see cref="TextBox(string, IValue{string}, Action{TextBoxBuilder}?)"/>.
+    /// </summary>
+    /// <param name="title">The card's title.</param>
+    /// <param name="value">The text, without line breaks.</param>
+    /// <param name="build">Sets the card's icon, description, conditions, placeholder, limit and font.</param>
+    public TSelf TextBox(string title, IReadOnlyValue<string> value, Action<TextBoxBuilder>? build = null)
+    {
+        ArgumentNullException.ThrowIfNull(value);
+
+        var builder = new TextBoxBuilder(title);
         build?.Invoke(builder);
 
         Add(builder.Build(value));

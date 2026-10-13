@@ -15,6 +15,12 @@ public sealed class PageCategory
     public static PageCategory Command { get; } = new("Command");
 
     /// <summary>
+    ///     Tools for code and data, such as encoding text, hashing it, making GUIDs and reading JWTs. Pages here work on
+    ///     what's typed or copied, on the PC only.
+    /// </summary>
+    public static PageCategory Developer { get; } = new("Developer");
+
+    /// <summary>
     ///     What your account shares, which apps use your camera, microphone and location, and what the PC's owner manages.
     ///     Pages here only change settings of the signed-in account, never those of the PC or its organization.
     /// </summary>
