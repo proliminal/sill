@@ -12,13 +12,13 @@ public sealed class PageCategory
     /// <summary>
     ///     Shells, the terminal and the folders they find programs in.
     /// </summary>
-    public static PageCategory Command { get; } = new("Command");
+    public static PageCategory Developer { get; } = new("Developer");
 
     /// <summary>
     ///     Tools for code and data, such as encoding text, hashing it, making GUIDs and reading JWTs. Pages here work on
     ///     what's typed or copied, on the PC only.
     /// </summary>
-    public static PageCategory Developer { get; } = new("Developer");
+    public static PageCategory Tools { get; } = new("Tools");
 
     /// <summary>
     ///     What your account shares, which apps use your camera, microphone and location, and what the PC's owner manages.

@@ -233,4 +233,10 @@ public readonly record struct Glyph
 
     /// <summary>An exclamation mark in a circle, for what needs attention.</summary>
     public static Glyph Error { get; } = FromCodepoint(0xE783);
+
+    /// <summary>A path, for file paths and locations.</summary>
+    public static Glyph Path { get; } = FromCodepoint(0xE7C3);
+
+    /// <summary>Two tools vertically aligned side by side.</summary>
+    public static Glyph DeveloperTools { get; } = FromCodepoint(0xEC7A);
 }
