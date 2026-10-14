@@ -12,7 +12,7 @@ namespace Proliminal.Sill.Sdk.Abstractions;
 ///     </para>
 ///     <para>
 ///         Anything long-lived while it's on, such as values bound to the page, belongs in fields of the plugin. A DLL may
-///         hold several plugins; they're loaded together, and when one can't be, none is.
+///         hold several plugins; they're loaded together, and when one can't be, none are.
 ///     </para>
 /// </remarks>
 public interface IPlugin : IDisposable
@@ -27,5 +27,10 @@ public interface IPlugin : IDisposable
     ///     Sets up the plugin: its page, quick actions, settings and whatever it runs in the background. Called once on
     ///     the UI thread. Throwing here disables only this plugin; Sill disposes it and shows why.
     /// </summary>
+    /// <remarks>
+    ///     Sill waits for a plugin at start. Start heavy tasks, such as reading a large file or
+    ///     the network, on a thread of its own and show its result with <see cref="IPluginContext.Post"/>. Sill notes a
+    ///     plugin that takes longer than a second.
+    /// </remarks>
     public void Configure(IPluginContext context);
 }
