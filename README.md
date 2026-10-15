@@ -3,11 +3,6 @@
 </p>
 
 <p align="center">
-  Privacy, security and personalization for Windows 10 and 11,<br>
-  with keyboard shortcuts and one-click switches for everyday tasks.
-</p>
-
-<p align="center">
   <a href="https://github.com/proliminal/sill/releases/latest"><img src="https://img.shields.io/github/v/release/proliminal/sill?style=for-the-badge&label=Download&color=4cc2ff" alt="Download the latest release"></a>
   <img src="https://img.shields.io/badge/Windows-10%20%7C%2011-0078d4?style=for-the-badge" alt="Windows 10 and 11, 64-bit">
   <a href="LICENSE"><img src="https://img.shields.io/badge/SDK-MIT-3a3a3a?style=for-the-badge" alt="SDK: MIT license"></a>
@@ -18,10 +13,8 @@
 </p>
 
 <p align="center">
-  <b>Home</b> shows what needs you, your scores and your shortcuts. The <b>quick menu</b> opens from the tray icon or <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>Q</kbd>.
+  <b>Home</b> shows what needs you, what's new, your scores and what Sill noticed. The <b>quick menu</b> opens from the tray icon or <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>Q</kbd>.
 </p>
-
-<br>
 
 ## 🛡️ Privacy and security, scored
 
@@ -39,7 +32,7 @@ needs no administrator, and nothing it reads leaves your PC.
   </tr>
   <tr>
     <td width="50%"><img src="docs/screenshots/privacy-check.png" alt="Privacy check, turning off all sharing at once"></td>
-    <td width="50%"><img src="docs/screenshots/app-access.png" alt="App access for the camera, microphone and location, with the privacy shutter"></td>
+    <td width="50%"><img src="docs/screenshots/app-access.png" alt="App access, with the switches for the camera, microphone, location and your information"></td>
   </tr>
   <tr>
     <td><b>Privacy check</b><br>Turns off every setting that shares what you do, and turns it off again when a Windows update turns it back on.</td>
@@ -50,8 +43,6 @@ needs no administrator, and nothing it reads leaves your PC.
 **Sill noticed** keeps a timeline of what changed on its own: sharing that came back on, protection that turned off,
 apps that added themselves to startup, and settings Sill applied that something else changed back.
 
-<br>
-
 ## 🔑 A password manager that stays on your PC
 
 Your logins in one encrypted file on this PC, never synced or sent anywhere. Unlock it with a master password or
@@ -61,16 +52,12 @@ of clipboard history and are cleared after a while. It shows weak and reused pas
 imports from your browser, Bitwarden, 1Password and KeePass. From a terminal, `sill pass get <name> --clip` copies a
 password once you allow it.
 
-<br>
-
 ## 🎨 Switch how Windows looks in one click
 
 <img src="docs/screenshots/appearance.png" alt="Appearance page with saved looks and the built-in Presenting look" width="100%">
 
-Save how Windows looks now as a **look**: dark mode, all black, transparency, wallpaper and a compact taskbar. Switch
-between looks from the quick menu, or put on the built-in **Presenting** look before you share your screen.
-
-<br>
+Save your configuration as a **look**: dark mode, all black, transparency, wallpaper and a compact taskbar. 
+Switch between looks from the quick menu.
 
 ## ⌨️ Made for the command line
 
@@ -104,8 +91,6 @@ matches and groups, and **JWT** decoding. Most also work on what's on the clipbo
 
 Sill can also opt you out of the usage data that tools like the .NET SDK, PowerShell, the Azure CLI and Next.js send.
 
-<br>
-
 ## ⚡ Everyday shortcuts
 
 <table>
@@ -119,21 +104,10 @@ Sill can also opt you out of the usage data that tools like the .NET SDK, PowerS
   </tr>
 </table>
 
-| Shortcut | Does |
-| --- | --- |
-| <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>S</kbd> | Open Sill |
-| <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>Q</kbd> | Open the quick menu |
-| <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>P</kbd> | Copy the clipboard's image as a path |
-| <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>T</kbd> | Bring Windows Terminal to the front |
-| <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>E</kbd> | Open Terminal in the File Explorer folder in front |
-| <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>L</kbd> | Find a password, to fill it in or copy it |
-
 Every shortcut can be changed, and every quick action, and every look, can get one of its own. Moving to another PC?
 Export your setup to a file, looks included, and import it there; you see every change before anything is changed.
 From a terminal, `sill setup export|import <file>` does the same, `sill setting list|get|set` reaches every option on
 Sill's pages, and `sill look apply <name>` switches looks.
-
-<br>
 
 ## 🧩 Write your own plugins
 
@@ -154,9 +128,3 @@ in an exported setup. It can add quick actions, which users can give a shortcut,
 security score. It can also note what it did in Sill noticed, and show on Home what keeps it from working. Each plugin
 is loaded apart from Sill and from other plugins: it gets the SDK and .NET from Sill, and brings everything else
 itself. Issues and pull requests for the SDK are welcome.
-
----
-
-<sub>Sill installs itself per user without administrator rights, and updates itself from this repository's releases.
-`sill.exe` isn't code-signed yet, so SmartScreen may ask you to choose *More info* → *Run anyway*.
-The SDK is [MIT-licensed](LICENSE); `sill.exe` itself isn't open source.</sub>
