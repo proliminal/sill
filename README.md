@@ -1,8 +1,5 @@
 <p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/brand/sill-banner-dark@2x.png">
-    <img src="docs/brand/sill-banner-light@2x.png" alt="Sill. Your PC, on your terms. The cornerstone of a private, secure and personal device." width="100%">
-  </picture>
+  <img src="docs/brand/sill-banner@2x.png" alt="Sill. Your PC, on your terms. The cornerstone of a private, secure and personal device." width="100%">
 </p>
 
 <p align="center">
