@@ -83,6 +83,25 @@ public interface IPluginContext
     public void AddQuickAction(string title, Glyph icon, PluginAction run, bool pinned);
 
     /// <summary>
+    ///     Adds a section to the top of the quick menu, above its tiles, such as what's running now with a button that
+    ///     stops it. Unlike a tile, it follows its values while the menu is open and can hide itself with
+    ///     <see cref="QuickMenuSectionBuilder.VisibleWhen"/>, and users don't arrange it. Sections of several plugins are
+    ///     shown in the order the plugins started. <paramref name="build"/> is called once, right away.
+    /// </summary>
+    /// <example>
+    ///     <code>
+    ///     context.AddQuickMenuSection("Timer", section => section
+    ///         .Status(elapsed)
+    ///         .Description(taskName)
+    ///         .VisibleWhen(isRunning)
+    ///         .Action("Stop", StopAsync));
+    ///     </code>
+    /// </example>
+    /// <param name="title">The section's title.</param>
+    /// <param name="build">Sets the section's status, description, buttons and when it's shown.</param>
+    public void AddQuickMenuSection(string title, Action<QuickMenuSectionBuilder> build);
+
+    /// <summary>
     ///     Gets the plugin's settings, stored under its <see cref="PluginInfo.Id"/> in <c>settings.json</c>. Missing
     ///     options are written with their defaults, which are the property initializers of <typeparamref name="T"/>.
     ///     Call it once and keep the result; it stays up to date when the file is edited.
@@ -90,6 +109,19 @@ public interface IPluginContext
     /// <typeparam name="T">A class with a property per option, serialized as JSON.</typeparam>
     public IPluginSettings<T> GetSettings<T>()
         where T : class, new();
+
+    /// <summary>
+    ///     Gets a secret of the plugin's, such as an API token, to read or to bind a
+    ///     <see cref="TextBoxBuilder.Secret"/> box to. Sill keeps it encrypted for the Windows account in a file of its own
+    ///     on this PC, never in <c>settings.json</c>: it doesn't go along in an exported setup, <c>sill setting</c> can't
+    ///     read it, and other plugins don't get it. Call it once per name and keep the result.
+    /// </summary>
+    /// <remarks>
+    ///     It's empty until it's set, and setting it empty forgets it. It keeps the secret from files and setups, not from
+    ///     programs that run as the same Windows account, which can do what Sill does.
+    /// </remarks>
+    /// <param name="name">A name that never changes, of letters and digits starting with a letter, such as <c>ApiToken</c>.</param>
+    public IValue<string> GetSecret(string name);
 
     /// <summary>
     ///     Shows a Windows notification from Sill's tray icon. Can be called from any thread, at any time.

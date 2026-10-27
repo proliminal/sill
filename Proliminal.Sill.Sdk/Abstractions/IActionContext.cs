@@ -1,3 +1,5 @@
+using Proliminal.Sill.Sdk.Pages;
+
 namespace Proliminal.Sill.Sdk.Abstractions;
 
 /// <summary>
@@ -52,4 +54,40 @@ public interface IActionContext
     /// </summary>
     /// <param name="text">The secret; not empty.</param>
     public void SetSecretClipboardText(string text);
+
+    /// <summary>
+    ///     Shows a popup over the app in front, as the Find a password shortcut does: cards as on a page, and commands in
+    ///     its footer. It's drawn as Sill's own windows are, closes with Esc or when it loses the focus, and stays open
+    ///     while one of its commands runs. A popup already open, of this plugin or another, closes first; the plugin's
+    ///     popup also closes when it's turned off.
+    /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         <paramref name="build"/> is called once, right away; mistakes in it throw here. The popup follows the values
+    ///         its cards are bound to while it's open, so keep those in fields of the plugin, as for a page.
+    ///     </para>
+    ///     <para>
+    ///         Users can pin a popup with the pin by its title: it then stays on top where they drag it, and
+    ///         <see cref="CommandBuilder.Closes"/> and <see cref="ClosePopup"/> leave it open, so it can serve as a small
+    ///         window of its own. Before closing, set what it shows next, such as what's running after Start, as a pinned
+    ///         popup goes on showing it. Showing the plugin's popup again while it's pinned keeps it pinned, where it was.
+    ///     </para>
+    /// </remarks>
+    /// <example>
+    ///     <code>
+    ///     context.AddQuickAction("Add a note", Glyph.Edit, action => action.ShowPopup("Add a note", popup => popup
+    ///         .TextBox("Note", note)
+    ///         .Command("Add", AddAsync, command => command.Default().Closes())));
+    ///     </code>
+    /// </example>
+    /// <param name="title">The popup's title, such as <c>Track time</c>.</param>
+    /// <param name="build">Describes the popup's cards and commands.</param>
+    public void ShowPopup(string title, Action<PopupBuilder> build);
+
+    /// <summary>
+    ///     Closes the plugin's popup, if it's open, as a command does that only closes it sometimes, such as Start when
+    ///     nothing else runs. For a command that always closes it, <see cref="CommandBuilder.Closes"/> is shorter. A popup
+    ///     the user pinned stays open.
+    /// </summary>
+    public void ClosePopup();
 }

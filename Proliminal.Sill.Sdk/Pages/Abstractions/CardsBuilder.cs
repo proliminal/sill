@@ -17,9 +17,6 @@ public abstract class CardsBuilder<TSelf>
     {
     }
 
-    private TSelf Self
-        => (TSelf)this;
-
     /// <summary>
     ///     Adds a card with a button.
     /// </summary>
@@ -311,24 +308,6 @@ public abstract class CardsBuilder<TSelf>
     }
 
     /// <summary>
-    ///     Adds a card with a keyboard shortcut, changed by clicking it and pressing the new keys. Only for Sill's own
-    ///     pages, as plugins can't register shortcuts yet.
-    /// </summary>
-    /// <param name="title">The card's title, which says what the shortcut does.</param>
-    /// <param name="value">The shortcut as Sill writes it, such as <c>Ctrl+Shift+Alt+P</c>, or empty when it's off.</param>
-    /// <param name="build">Sets the card's icon, description, status, buttons and conditions.</param>
-    internal TSelf Shortcut(string title, IValue<string> value, Action<ShortcutBuilder>? build = null)
-    {
-        ArgumentNullException.ThrowIfNull(value);
-
-        var builder = new ShortcutBuilder(title);
-        build?.Invoke(builder);
-
-        Add(new ShortcutCard(builder.Info, value));
-        return Self;
-    }
-
-    /// <summary>
     ///     Adds a card that shows a folder under its description, with a Browse button that picks another one.
     /// </summary>
     /// <example>
@@ -456,6 +435,27 @@ public abstract class CardsBuilder<TSelf>
         Add(builder.Build(items, title));
         return Self;
     }
+
+    /// <summary>
+    ///     Adds a card with a keyboard shortcut, changed by clicking it and pressing the new keys. Only for Sill's own
+    ///     pages, as plugins can't register shortcuts yet.
+    /// </summary>
+    /// <param name="title">The card's title, which says what the shortcut does.</param>
+    /// <param name="value">The shortcut as Sill writes it, such as <c>Ctrl+Shift+Alt+P</c>, or empty when it's off.</param>
+    /// <param name="build">Sets the card's icon, description, status, buttons and conditions.</param>
+    internal TSelf Shortcut(string title, IValue<string> value, Action<ShortcutBuilder>? build = null)
+    {
+        ArgumentNullException.ThrowIfNull(value);
+
+        var builder = new ShortcutBuilder(title);
+        build?.Invoke(builder);
+
+        Add(new ShortcutCard(builder.Info, value));
+        return Self;
+    }
+
+    private TSelf Self
+        => (TSelf)this;
 
     private protected abstract void Add(PageElement element);
 }

@@ -10,7 +10,6 @@ internal sealed class ConstantValue<T>(T value) : IReadOnlyValue<T>
     public T Value
         => value;
 
-    // Never raised.
     public event Action? Changed
     {
         add { }

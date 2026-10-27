@@ -10,9 +10,10 @@ namespace Proliminal.Sill.Sdk.Pages.Model;
 [EditorBrowsable(EditorBrowsableState.Never)]
 public sealed class TextAreaCard : CardElement
 {
-    internal TextAreaCard(CardInfo info, IValue<string> value, string? placeholder, int lines, int maxLength, bool isMonospace, bool changesWhileTyping, bool isReadOnly)
+    internal TextAreaCard(CardInfo info, IValue<string> value, string? placeholder, int lines, int maxLength, bool isMonospace, bool changesWhileTyping, bool isReadOnly, bool isSecret)
         : base(info)
     {
+        IsSecret = isSecret;
         Value = value;
         Placeholder = placeholder;
         Lines = lines;
@@ -45,6 +46,9 @@ public sealed class TextAreaCard : CardElement
 
     /// <summary>Whether the text can only be selected and copied, not changed, as for a result.</summary>
     public bool IsReadOnly { get; }
+
+    /// <summary>Whether the text is shown as dots and can't be copied, as for a password or a token. Only for a box of 1 line.</summary>
+    public bool IsSecret { get; }
 
     internal override IEnumerable<IReadOnlyValue> GetValues()
         => base.GetValues().Append(Value);

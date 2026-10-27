@@ -15,6 +15,23 @@ public sealed class TextBoxBuilder : TextCardBuilder<TextBoxBuilder>
     {
     }
 
+    /// <summary>
+    ///     Shows the text as dots and doesn't let it be copied, for a password or a token. Bind it to a value from
+    ///     <see cref="IPluginContext.GetSecret"/>, which keeps it out of <c>settings.json</c>.
+    /// </summary>
+    /// <example>
+    ///     <code>
+    ///     .TextBox("API token", context.GetSecret("ApiToken"), text => text
+    ///         .Secret()
+    ///         .Placeholder("Paste your token"))
+    ///     </code>
+    /// </example>
+    public TextBoxBuilder Secret()
+    {
+        IsSecret = true;
+        return this;
+    }
+
     internal TextAreaCard Build(IValue<string> value)
         => Build(value, lines: 1);
 
