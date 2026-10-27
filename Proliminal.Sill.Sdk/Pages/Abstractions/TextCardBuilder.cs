@@ -17,6 +17,9 @@ public abstract class TextCardBuilder<TSelf> : CardBuilder<TSelf>
     private bool _changesWhileTyping;
     private bool _isReadOnly;
 
+    // Only a box of one line offers it; see TextBoxBuilder.Secret.
+    private protected bool IsSecret { get; set; }
+
     private protected TextCardBuilder(string title)
         : base(title)
     {
@@ -81,8 +84,10 @@ public abstract class TextCardBuilder<TSelf> : CardBuilder<TSelf>
     }
 
     private protected TextAreaCard Build(IValue<string> value, int lines)
-        => new(Info, value, _placeholder, lines, _maxLength, _isMonospace, _changesWhileTyping, _isReadOnly);
+        => new(Info, value, _placeholder, lines, _maxLength, _isMonospace, _changesWhileTyping, _isReadOnly, IsSecret);
 
     private protected TextAreaCard Build(IReadOnlyValue<string> value, int lines)
-        => new(Info, new DisplayedValue<string>(value), _placeholder, lines, _maxLength, _isMonospace, changesWhileTyping: false, isReadOnly: true);
+        => IsSecret
+            ? throw new InvalidOperationException("A secret box needs a value it can change, not one it only shows.")
+            : new(Info, new DisplayedValue<string>(value), _placeholder, lines, _maxLength, _isMonospace, changesWhileTyping: false, isReadOnly: true, isSecret: false);
 }

@@ -150,8 +150,10 @@ Sill's pages, and `sill look apply <name>` switches looks.
 
 Plugins are .NET class libraries built on the SDK in this repository. A plugin describes its page and Sill draws it,
 so it looks like the rest of Sill and is found by search. Its options can be changed with `sill setting` and go along
-in an exported setup. It can add quick actions, which users can give a shortcut, and recommendations to the privacy or
-security score. It can also note what it did in Sill noticed, and show on Home what keeps it from working. Each plugin
+in an exported setup; secrets, such as API tokens, are kept encrypted apart from them and never exported. It can add
+quick actions, which users can give a shortcut, popups that open over any app as the password picker does, sections at
+the top of the quick menu, and recommendations to the privacy or security score. It can also note what it did in Sill
+noticed, and show on Home what keeps it from working. Each plugin
 is loaded apart from Sill and from other plugins: it gets the SDK and .NET from Sill, and brings everything else
 itself. Issues and pull requests for the SDK are welcome.
 
