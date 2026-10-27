@@ -28,12 +28,6 @@ public abstract class CardBuilder<TSelf>
         _title = title;
     }
 
-    private protected TSelf Self
-        => (TSelf)this;
-
-    internal CardInfo Info
-        => new(_title, _description, _icon, _visibleWhen, _enabledWhen, _status, _statusTone, _actions.ToArray(), _details, _keywords.ToArray());
-
     /// <summary>
     ///     Shows <paramref name="icon"/> left of the title. Cards without one leave the space out.
     /// </summary>
@@ -200,4 +194,10 @@ public abstract class CardBuilder<TSelf>
         _enabledWhen = condition ?? throw new ArgumentNullException(nameof(condition));
         return Self;
     }
+
+    internal CardInfo Info
+        => new(_title, _description, _icon, _visibleWhen, _enabledWhen, _status, _statusTone, _actions.ToArray(), _details, _keywords.ToArray());
+
+    private protected TSelf Self
+        => (TSelf)this;
 }

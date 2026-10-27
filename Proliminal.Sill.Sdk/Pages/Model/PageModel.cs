@@ -4,8 +4,6 @@ using Proliminal.Sill.Sdk.Pages.Model.Abstractions;
 
 namespace Proliminal.Sill.Sdk.Pages.Model;
 
-// What a PageBuilder describes, for Sill to draw. Plugins never create these; they only see them through the builders.
-
 /// <summary>
 ///     A described page: its elements from top to bottom.
 /// </summary>

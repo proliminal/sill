@@ -9,7 +9,6 @@ namespace Proliminal.Sill.Sdk.Pages;
 /// </summary>
 public sealed class CommandBuilder
 {
-    // Ctrl with these edits text in the popup's boxes, as anywhere else.
     private const string RESERVED_KEYS = "ACVXYZ";
 
     private bool _isDefault;

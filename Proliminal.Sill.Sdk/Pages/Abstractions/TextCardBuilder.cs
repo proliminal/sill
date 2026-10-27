@@ -17,9 +17,6 @@ public abstract class TextCardBuilder<TSelf> : CardBuilder<TSelf>
     private bool _changesWhileTyping;
     private bool _isReadOnly;
 
-    // Only a box of one line offers it; see TextBoxBuilder.Secret.
-    private protected bool IsSecret { get; set; }
-
     private protected TextCardBuilder(string title)
         : base(title)
     {
@@ -82,6 +79,8 @@ public abstract class TextCardBuilder<TSelf> : CardBuilder<TSelf>
         _isReadOnly = true;
         return Self;
     }
+
+    private protected bool IsSecret { get; set; }
 
     private protected TextAreaCard Build(IValue<string> value, int lines)
         => new(Info, value, _placeholder, lines, _maxLength, _isMonospace, _changesWhileTyping, _isReadOnly, IsSecret);

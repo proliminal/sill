@@ -33,12 +33,6 @@ public sealed class PageCategory
     public static PageCategory Security { get; } = new("Security");
 
     /// <summary>
-    ///     Sill's own plugin pages: its plugins, the ones from the plugins folder, and the plugin documentation. Only Sill
-    ///     puts pages here.
-    /// </summary>
-    internal static PageCategory Plugins { get; } = new("Plugins");
-
-    /// <summary>
     ///     The name Sill knows the category by.
     /// </summary>
     public string Id { get; }
@@ -46,4 +40,10 @@ public sealed class PageCategory
     /// <inheritdoc />
     public override string ToString()
         => Id;
+
+    /// <summary>
+    ///     Sill's own plugin pages: its plugins, the ones from the plugins folder, and the plugin documentation. Only Sill
+    ///     puts pages here.
+    /// </summary>
+    internal static PageCategory Plugins { get; } = new("Plugins");
 }
