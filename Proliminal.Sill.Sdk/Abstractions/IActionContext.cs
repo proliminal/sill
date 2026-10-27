@@ -62,8 +62,16 @@ public interface IActionContext
     ///     popup also closes when it's turned off.
     /// </summary>
     /// <remarks>
-    ///     <paramref name="build"/> is called once, right away; mistakes in it throw here. The popup follows the values
-    ///     its cards are bound to while it's open, so keep those in fields of the plugin, as for a page.
+    ///     <para>
+    ///         <paramref name="build"/> is called once, right away; mistakes in it throw here. The popup follows the values
+    ///         its cards are bound to while it's open, so keep those in fields of the plugin, as for a page.
+    ///     </para>
+    ///     <para>
+    ///         Users can pin a popup with the pin by its title: it then stays on top where they drag it, and
+    ///         <see cref="CommandBuilder.Closes"/> and <see cref="ClosePopup"/> leave it open, so it can serve as a small
+    ///         window of its own. Before closing, set what it shows next, such as what's running after Start, as a pinned
+    ///         popup goes on showing it. Showing the plugin's popup again while it's pinned keeps it pinned, where it was.
+    ///     </para>
     /// </remarks>
     /// <example>
     ///     <code>
@@ -78,7 +86,8 @@ public interface IActionContext
 
     /// <summary>
     ///     Closes the plugin's popup, if it's open, as a command does that only closes it sometimes, such as Start when
-    ///     nothing else runs. For a command that always closes it, <see cref="CommandBuilder.Closes"/> is shorter.
+    ///     nothing else runs. For a command that always closes it, <see cref="CommandBuilder.Closes"/> is shorter. A popup
+    ///     the user pinned stays open.
     /// </summary>
     public void ClosePopup();
 }

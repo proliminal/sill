@@ -52,7 +52,7 @@ public sealed class CommandBuilder
     }
 
     /// <summary>
-    ///     Closes the popup once the command is done, unless it threw.
+    ///     Closes the popup once the command is done, unless it threw or the user pinned the popup, which keeps it open.
     /// </summary>
     public CommandBuilder Closes()
     {

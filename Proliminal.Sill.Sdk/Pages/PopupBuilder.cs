@@ -62,6 +62,30 @@ public sealed class PopupBuilder : CardsBuilder<PopupBuilder>
     }
 
     /// <summary>
+    ///     Puts cards side by side, each as wide as the others, such as a short box and a switch that would each take a
+    ///     full row otherwise. A card that's hidden, as with <see cref="CardBuilder{TSelf}.VisibleWhen"/>, leaves its width
+    ///     to the others. Keep it to cards with little in them: a popup is narrow.
+    /// </summary>
+    /// <example>
+    ///     <code>
+    ///     .Row(row => row
+    ///         .TextBox("Time to log", duration, text => text.Placeholder("1:30"))
+    ///         .Toggle("Billable", billable))
+    ///     </code>
+    /// </example>
+    /// <param name="build">Adds the cards, from left to right; two or more.</param>
+    public PopupBuilder Row(Action<RowBuilder> build)
+    {
+        ArgumentNullException.ThrowIfNull(build);
+
+        var builder = new RowBuilder();
+        build(builder);
+
+        _elements.Add(builder.Build());
+        return this;
+    }
+
+    /// <summary>
     ///     Adds a button to the footer, right of the ones added before. While it runs, the popup stays open when it loses
     ///     the focus, and its commands are disabled. If it throws, the error shows above the footer instead of as a
     ///     notification, and the popup stays open.

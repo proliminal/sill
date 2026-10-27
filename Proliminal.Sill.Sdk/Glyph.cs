@@ -171,6 +171,12 @@ public readonly record struct Glyph
     /// <summary>A map pin, for location.</summary>
     public static Glyph MapPin { get; } = FromCodepoint(0xE707);
 
+    /// <summary>A pushpin, for keeping something where it is, such as a window on top.</summary>
+    public static Glyph Pin { get; } = FromCodepoint(0xE718);
+
+    /// <summary>A filled pushpin, for something that's pinned now.</summary>
+    public static Glyph Pinned { get; } = FromCodepoint(0xE842);
+
     /// <summary>A price tag, for advertising and labels.</summary>
     public static Glyph Tag { get; } = FromCodepoint(0xE8EC);
 
