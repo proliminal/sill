@@ -1,11 +1,12 @@
 using Proliminal.Sill.Sdk.Abstractions;
 using Proliminal.Sill.Sdk.Pages.Model;
+using Proliminal.Sill.Sdk.Values;
 
 namespace Proliminal.Sill.Sdk.Pages.Abstractions;
 
 /// <summary>
-///     Sets up a card with a box for text: what's shown while it's empty, how long the text can be, its font and when the
-///     value changes. See <see cref="TextBoxBuilder"/> and <see cref="TextAreaBuilder"/>.
+///     Represents a builder for a card with a text box: what's shown while it's empty, how long the text can be, its font and when the value changes.
+///     See <see cref="TextBoxBuilder"/> and <see cref="TextAreaBuilder"/>.
 /// </summary>
 /// <typeparam name="TSelf">The builder itself, so calls can be chained.</typeparam>
 public abstract class TextCardBuilder<TSelf> : CardBuilder<TSelf>
@@ -23,7 +24,7 @@ public abstract class TextCardBuilder<TSelf> : CardBuilder<TSelf>
     }
 
     /// <summary>
-    ///     Shows <paramref name="placeholder"/> in the box while it's empty, such as an example of what goes in it.
+    ///     Sets the text shown in the box while it's empty, such as an example of what goes in it.
     /// </summary>
     /// <param name="placeholder">A few words, or an example.</param>
     public TSelf Placeholder(string placeholder)
@@ -35,9 +36,9 @@ public abstract class TextCardBuilder<TSelf> : CardBuilder<TSelf>
     }
 
     /// <summary>
-    ///     Stops the text at <paramref name="maxLength"/> characters. By default there's no limit.
+    ///     Sets the maximum number of characters. By default there's no limit.
     /// </summary>
-    /// <param name="maxLength">The most characters, at least 1.</param>
+    /// <param name="maxLength">The maximum number of characters, at least 1.</param>
     public TSelf MaxLength(int maxLength)
     {
         ArgumentOutOfRangeException.ThrowIfLessThan(maxLength, 1);
@@ -56,23 +57,22 @@ public abstract class TextCardBuilder<TSelf> : CardBuilder<TSelf>
     }
 
     /// <summary>
-    ///     Changes the value with each change while typing, instead of when the box loses focus, for text whose result
-    ///     shows elsewhere on the page as it's typed, such as a conversion. Esc doesn't put anything back then.
+    ///     Sets the value on every change while typing, instead of when the box loses focus, for text whose result shows elsewhere on the page as it's typed, such as a conversion.
+    ///     Esc no longer restores the previous text.
     /// </summary>
     /// <remarks>
-    ///     The value is set with every key, so setting it should be quick and shouldn't throw for text that's only half
-    ///     typed: show what's wrong in a <see cref="CardBuilder{TSelf}.Status(IReadOnlyValue{string?})"/> instead, as a
-    ///     thrown error is a notification.
+    ///     The value is set on every key press, so setting it should be quick and shouldn't throw for text that's only partly typed.
+    ///     Show what's wrong with <see cref="CardBuilder{TSelf}.Status(IReadOnlyValue{string?})"/> instead, as a thrown error becomes a notification.
     /// </remarks>
-    public TSelf WhileTyping()
+    public TSelf ChangesWhileTyping()
     {
         _changesWhileTyping = true;
         return Self;
     }
 
     /// <summary>
-    ///     Only shows the text, to select and copy, such as a result the plugin keeps in a <see cref="State{T}"/>. The
-    ///     value isn't changed from the box. A card given an <see cref="IReadOnlyValue{T}"/> is read-only already.
+    ///     Shows the text only, to select and copy, such as a result the plugin keeps in a <see cref="State{T}"/>. The value isn't changed from the box.
+    ///     A card given an <see cref="IReadOnlyValue{T}"/> is already read-only.
     /// </summary>
     public TSelf ReadOnly()
     {

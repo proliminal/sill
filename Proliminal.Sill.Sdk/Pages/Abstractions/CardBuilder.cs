@@ -1,25 +1,26 @@
 using Proliminal.Sill.Sdk.Abstractions;
 using Proliminal.Sill.Sdk.Pages.Model;
+using Proliminal.Sill.Sdk.Values;
 
 namespace Proliminal.Sill.Sdk.Pages.Abstractions;
 
 /// <summary>
-///     Sets what every card has besides its title: an icon, a description and when it's shown and enabled.
+///     Represents a builder for what every card has besides its title: an icon, a description, a status, buttons, and when it's shown and enabled.
 /// </summary>
 /// <typeparam name="TSelf">The builder itself, so calls can be chained.</typeparam>
 public abstract class CardBuilder<TSelf>
     where TSelf : CardBuilder<TSelf>
 {
     private readonly string _title;
+    private readonly List<CardAction> _actions = [];
+    private readonly List<string> _keywords = [];
     private IReadOnlyValue<string>? _description;
     private Glyph? _icon;
     private IReadOnlyValue<bool>? _visibleWhen;
     private IReadOnlyValue<bool>? _enabledWhen;
     private IReadOnlyValue<string?>? _status;
     private IReadOnlyValue<Tone>? _statusTone;
-    private readonly List<CardAction> _actions = [];
-    private IReadOnlyValue<IReadOnlyList<CardDetail>>? _details;
-    private readonly List<string> _keywords = [];
+    private IReadOnlyValue<IReadOnlyList<CardLine>>? _lines;
 
     private protected CardBuilder(string title)
     {
@@ -28,8 +29,10 @@ public abstract class CardBuilder<TSelf>
         _title = title;
     }
 
+    #region Content
+
     /// <summary>
-    ///     Shows <paramref name="icon"/> left of the title. Cards without one leave the space out.
+    ///     Sets the icon left of the title. Cards without one leave the space out.
     /// </summary>
     /// <param name="icon">The icon.</param>
     public TSelf Icon(Glyph icon)
@@ -42,7 +45,7 @@ public abstract class CardBuilder<TSelf>
     }
 
     /// <summary>
-    ///     Shows <paramref name="description"/> under the title, saying what the card does.
+    ///     Sets the description under the title, stating what the card does.
     /// </summary>
     /// <param name="description">One or two sentences.</param>
     public TSelf Description(string description)
@@ -54,8 +57,7 @@ public abstract class CardBuilder<TSelf>
     }
 
     /// <summary>
-    ///     Shows <paramref name="description"/> under the title, which changes with it, such as whether what the card
-    ///     opens is installed.
+    ///     Sets a description under the title that changes with <paramref name="description"/>, such as whether what the card opens is installed.
     /// </summary>
     /// <param name="description">One or two sentences.</param>
     public TSelf Description(IReadOnlyValue<string> description)
@@ -65,8 +67,8 @@ public abstract class CardBuilder<TSelf>
     }
 
     /// <summary>
-    ///     Shows <paramref name="status"/> left of the control, such as <c>Installed</c> or <c>Installing…</c>. It's hidden
-    ///     while it's <see langword="null"/> or empty.
+    ///     Sets a status left of the control, such as <c>Installed</c> or <c>Installing…</c>.
+    ///     It's hidden while it's <see langword="null"/> or empty.
     /// </summary>
     /// <param name="status">A few words, such as what's wrong with what was typed.</param>
     public TSelf Status(IReadOnlyValue<string?> status)
@@ -76,8 +78,8 @@ public abstract class CardBuilder<TSelf>
     }
 
     /// <summary>
-    ///     Shows <paramref name="status"/> left of the control in the color of <paramref name="tone"/>, such as a green
-    ///     <c>Matches</c> or a red <c>Doesn't match</c>. The words should say it too, as not everyone tells colors apart.
+    ///     Sets a status left of the control in the color of <paramref name="tone"/>, such as a green <c>Matches</c> or a red <c>Doesn't match</c>.
+    ///     The words should say it too, as not everyone can tell colors apart.
     /// </summary>
     /// <example>
     ///     <code>
@@ -85,7 +87,7 @@ public abstract class CardBuilder<TSelf>
     ///     </code>
     /// </example>
     /// <param name="status">A few words, such as what's wrong with what was typed.</param>
-    /// <param name="tone">Its color; <see cref="Tone.Neutral"/> is the usual status color.</param>
+    /// <param name="tone">Its color; <see cref="Tone.Neutral"/> is the default status color.</param>
     public TSelf Status(IReadOnlyValue<string?> status, IReadOnlyValue<Tone> tone)
     {
         ArgumentNullException.ThrowIfNull(status);
@@ -97,31 +99,33 @@ public abstract class CardBuilder<TSelf>
     }
 
     /// <summary>
-    ///     Shows <paramref name="details"/> as lines inside the card, under its description, such as what a plugin uses.
-    ///     For a few lines that belong to this card; a list of things of their own is a
-    ///     <see cref="CardsBuilder{TSelf}.List"/>. Nothing shows while it's empty.
+    ///     Sets lines shown inside the card under its description, such as what a plugin uses. Nothing shows while it's empty.
+    ///     Use it for a few lines that belong to this card; for a list of separate items, use <see cref="CardsBuilder{TSelf}.List"/>.
     /// </summary>
     /// <example>
     ///     <code>
-    ///     .Details(Values.External&lt;IReadOnlyList&lt;CardDetail&gt;&gt;(() =>
+    ///     .Lines(Value.External&lt;IReadOnlyList&lt;CardLine&gt;&gt;(() =>
     ///         [new("Reads the clipboard", "To decode what you copy.", Glyph.Paste)]))
     ///     </code>
     /// </example>
-    /// <param name="details">The lines, from top to bottom.</param>
-    public TSelf Details(IReadOnlyValue<IReadOnlyList<CardDetail>> details)
+    /// <param name="lines">The lines, from top to bottom.</param>
+    public TSelf Lines(IReadOnlyValue<IReadOnlyList<CardLine>> lines)
     {
-        _details = details ?? throw new ArgumentNullException(nameof(details));
+        _lines = lines ?? throw new ArgumentNullException(nameof(lines));
         return Self;
     }
 
+    #endregion
+
+    #region Actions
+
     /// <summary>
-    ///     Adds a button left of the control, after the ones added before, such as Install next to a switch for
-    ///     something that's missing.
+    ///     Adds a button left of the control, after the ones added before, such as Install next to a switch for something that's missing.
     /// </summary>
     /// <example>
     ///     <code>
     ///     .Action("Install", InstallAsync, action => action
-    ///         .VisibleWhen(isInstalled.Not()))
+    ///         .VisibleWhen(isInstalled.Invert()))
     ///     </code>
     /// </example>
     /// <param name="label">The button's text.</param>
@@ -156,9 +160,13 @@ public abstract class CardBuilder<TSelf>
         }, build);
     }
 
+    #endregion
+
+    #region Search and Conditions
+
     /// <summary>
-    ///     Adds words people may search Sill for to find this card, besides its title and description, such as other
-    ///     names for what it does. The card's page opens with the card in view.
+    ///     Adds words people may search Sill for to find this card, besides its title and description, such as other names for what it does.
+    ///     The card's page opens with the card in view.
     /// </summary>
     /// <example>
     ///     <code>
@@ -166,7 +174,7 @@ public abstract class CardBuilder<TSelf>
     ///         .Keywords("trash", "delete files"))
     ///     </code>
     /// </example>
-    /// <param name="keywords">A word or a few, each; case doesn't matter.</param>
+    /// <param name="keywords">One or more words each; case doesn't matter.</param>
     public TSelf Keywords(params string[] keywords)
     {
         Keyword.AddTo(_keywords, keywords);
@@ -174,8 +182,7 @@ public abstract class CardBuilder<TSelf>
     }
 
     /// <summary>
-    ///     Only shows the card while <paramref name="condition"/> is <see langword="true"/>, such as the folder of a
-    ///     "custom folder" option.
+    ///     Shows the card only while <paramref name="condition"/> is <see langword="true"/>, such as the folder of a "custom folder" option.
     /// </summary>
     /// <param name="condition">When the card is shown.</param>
     public TSelf VisibleWhen(IReadOnlyValue<bool> condition)
@@ -185,8 +192,8 @@ public abstract class CardBuilder<TSelf>
     }
 
     /// <summary>
-    ///     Only enables the card's control while <paramref name="condition"/> is <see langword="true"/>. A bound value
-    ///     disables it too while it can't be changed.
+    ///     Enables the card's control only while <paramref name="condition"/> is <see langword="true"/>.
+    ///     A bound value also disables it while the value can't be changed.
     /// </summary>
     /// <param name="condition">When the control is enabled.</param>
     public TSelf EnabledWhen(IReadOnlyValue<bool> condition)
@@ -195,8 +202,10 @@ public abstract class CardBuilder<TSelf>
         return Self;
     }
 
+    #endregion
+
     internal CardInfo Info
-        => new(_title, _description, _icon, _visibleWhen, _enabledWhen, _status, _statusTone, _actions.ToArray(), _details, _keywords.ToArray());
+        => new(_title, _description, _icon, _visibleWhen, _enabledWhen, _status, _statusTone, _actions.ToArray(), _lines, _keywords.ToArray());
 
     private protected TSelf Self
         => (TSelf)this;

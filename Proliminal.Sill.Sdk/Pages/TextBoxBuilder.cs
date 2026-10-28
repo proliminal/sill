@@ -5,8 +5,8 @@ using Proliminal.Sill.Sdk.Pages.Model;
 namespace Proliminal.Sill.Sdk.Pages;
 
 /// <summary>
-///     Sets up a card with a box for one line of text. See
-///     <see cref="CardsBuilder{TSelf}.TextBox(string, IValue{string}, Action{TextBoxBuilder}?)"/>.
+///     Represents a builder for a card with a single-line text box.
+///     See <see cref="CardsBuilder{TSelf}.TextBox(string, IValue{string}, Action{TextBoxBuilder}?)"/>.
 /// </summary>
 public sealed class TextBoxBuilder : TextCardBuilder<TextBoxBuilder>
 {
@@ -16,8 +16,8 @@ public sealed class TextBoxBuilder : TextCardBuilder<TextBoxBuilder>
     }
 
     /// <summary>
-    ///     Shows the text as dots and doesn't let it be copied, for a password or a token. Bind it to a value from
-    ///     <see cref="IPluginContext.GetSecret"/>, which keeps it out of <c>settings.json</c>.
+    ///     Masks the text and prevents copying it, for a password or a token.
+    ///     Bind it to a value from <see cref="IPluginContext.GetSecret"/>, which keeps it out of <c>settings.json</c>.
     /// </summary>
     /// <example>
     ///     <code>

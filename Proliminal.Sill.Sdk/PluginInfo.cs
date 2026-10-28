@@ -1,13 +1,13 @@
 namespace Proliminal.Sill.Sdk;
 
 /// <summary>
-///     Who a plugin is. A plugin from outside Sill names its author and version; Sill's own plugins are part of Sill, so
+///     Represents what a plugin is. A plugin from outside Sill names its author and version; Sill's own plugins are part of Sill, so
 ///     they have neither.
 /// </summary>
 public sealed record PluginInfo
 {
     /// <summary>
-    ///     Describes a plugin from outside Sill.
+    ///     Creates a new instance of <see cref="PluginInfo"/> which describes a plugin from outside Sill, naming its author and version.
     /// </summary>
     /// <param name="id">
     ///     A name that never changes, of letters and digits starting with a letter, such as <c>HelloWorld</c>. The
@@ -29,9 +29,6 @@ public sealed record PluginInfo
         Version = version;
     }
 
-    /// <summary>
-    ///     Describes one of Sill's own plugins, which Sill marks as System.
-    /// </summary>
     internal PluginInfo(string id, string name)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
@@ -42,22 +39,22 @@ public sealed record PluginInfo
     }
 
     /// <summary>
-    ///     A name that never changes, which the plugin's settings are stored under.
+    ///     Gets the plugin ID, an immutable identification of letters and digits starting with a letter, such as <c>HelloWorld</c>.
     /// </summary>
     public string Id { get; }
 
     /// <summary>
-    ///     The display name, used as the page's title and in messages.
+    ///     Gets the plugin display name, used as the page's title and in messages.
     /// </summary>
     public string Name { get; }
 
     /// <summary>
-    ///     Who made the plugin, or <see langword="null"/> for one of Sill's own.
+    ///     Gets who made the plugin, or <see langword="null"/> for one of Sill's own.
     /// </summary>
     public string? Author { get; }
 
     /// <summary>
-    ///     The plugin's own version, or <see langword="null"/> for one of Sill's own.
+    ///     Gets the plugin's own version, or <see langword="null"/> for one of Sill's own.
     /// </summary>
     public Version? Version { get; }
 }

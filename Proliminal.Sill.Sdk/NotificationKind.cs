@@ -1,19 +1,27 @@
 namespace Proliminal.Sill.Sdk;
 
 /// <summary>
-///     The icon shown with a notification.
+///     Represents the icon shown with a taskbar notification.
 /// </summary>
 public enum NotificationKind
 {
-    /// <summary>No icon.</summary>
+    /// <summary>
+    ///     No icon.
+    /// </summary>
     None,
 
-    /// <summary>An information icon.</summary>
+    /// <summary>
+    ///     An information icon.
+    /// </summary>
     Info,
 
-    /// <summary>A warning icon, for something that didn't work.</summary>
+    /// <summary>
+    ///     A warning icon.
+    /// </summary>
     Warning,
 
-    /// <summary>An error icon.</summary>
+    /// <summary>
+    ///     An error icon.
+    /// </summary>
     Error,
 }

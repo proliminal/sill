@@ -1,10 +1,7 @@
 using Proliminal.Sill.Sdk.Abstractions;
 
-namespace Proliminal.Sill.Sdk;
+namespace Proliminal.Sill.Sdk.Values;
 
-/// <summary>
-///     One option of a plugin's settings. Created by <see cref="PluginSettingsExtensions.Value"/>.
-/// </summary>
 internal sealed class SettingsValue<T, TValue>(IPluginSettings<T> settings, Func<T, TValue> get, Action<T, TValue> set) : IValue<TValue>
     where T : class, new()
 {

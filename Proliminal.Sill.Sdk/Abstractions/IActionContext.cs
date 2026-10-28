@@ -3,12 +3,12 @@ using Proliminal.Sill.Sdk.Pages;
 namespace Proliminal.Sill.Sdk.Abstractions;
 
 /// <summary>
-///     What Sill offers an action while it runs.
+///     Represents what Sill offers an action while it runs.
 /// </summary>
 public interface IActionContext
 {
     /// <summary>
-    ///     The plugin the action belongs to.
+    ///     Gets the plugin the action belongs to.
     /// </summary>
     public PluginInfo Info { get; }
 
@@ -35,49 +35,46 @@ public interface IActionContext
     public Task<string?> PickFileAsync(string title);
 
     /// <summary>
-    ///     Reads the text on the clipboard. Declare <see cref="PluginCapability.Clipboard"/> when you use it.
+    ///     Gets the text on the clipboard.
+    ///     Declare <see cref="PluginCapability.Clipboard"/> when you use it.
     /// </summary>
-    /// <returns>The text, or <see langword="null"/> when there's no text on the clipboard, such as only an image.</returns>
+    /// <returns>The text, or <see langword="null"/> when there's no text on the clipboard, such as when it only holds an image.</returns>
     public string? GetClipboardText();
 
     /// <summary>
-    ///     Puts <paramref name="text"/> on the clipboard, in place of what was on it. Declare
-    ///     <see cref="PluginCapability.Clipboard"/> when you use it.
+    ///     Sets <paramref name="text"/> on the clipboard, replacing what was on it.
+    ///     Declare <see cref="PluginCapability.Clipboard"/> when you use it.
     /// </summary>
     /// <param name="text">The text, which can't be empty.</param>
     public void SetClipboardText(string text);
 
     /// <summary>
-    ///     Copies a secret, such as a password, a key or a token: Windows leaves it out of clipboard history and doesn't
-    ///     sync it to the user's other devices, and Sill clears it after a while, as long as the user set for copied
-    ///     passwords, unless something else was copied since. Other apps can still read it while it's on the clipboard.
+    ///     Sets a secret on the clipboard, such as a password, a key or a token.
+    ///     Windows leaves it out of clipboard history and doesn't sync it to the user's other devices, and Sill clears it after the time the user set for copied passwords, unless something else was copied since.
+    ///     Other apps can still read it while it's on the clipboard.
     /// </summary>
-    /// <param name="text">The secret; not empty.</param>
+    /// <param name="text">The secret, which can't be empty.</param>
     public void SetSecretClipboardText(string text);
 
     /// <summary>
-    ///     Shows a popup over the app in front, as the Find a password shortcut does: cards as on a page, and commands in
-    ///     its footer. It's drawn as Sill's own windows are, closes with Esc or when it loses the focus, and stays open
-    ///     while one of its commands runs. A popup already open, of this plugin or another, closes first; the plugin's
-    ///     popup also closes when it's turned off.
+    ///     Shows a popup over the app in front, as the Find a password shortcut does, with cards as on a page and commands in its footer.
+    ///     It closes with Esc or when it loses focus, and stays open while one of its commands runs.
+    ///     A popup that's already open, of this plugin or another, closes first; the plugin's popup also closes when the plugin is turned off.
     /// </summary>
     /// <remarks>
     ///     <para>
-    ///         <paramref name="build"/> is called once, right away; mistakes in it throw here. The popup follows the values
-    ///         its cards are bound to while it's open, so keep those in fields of the plugin, as for a page.
+    ///         <paramref name="build"/> is called once, right away; mistakes in it throw here. The popup follows the values its cards are bound to while it's open, so keep those in fields of the plugin, as for a page.
     ///     </para>
     ///     <para>
-    ///         Users can pin a popup with the pin by its title: it then stays on top where they drag it, and
-    ///         <see cref="CommandBuilder.Closes"/> and <see cref="ClosePopup"/> leave it open, so it can serve as a small
-    ///         window of its own. Before closing, set what it shows next, such as what's running after Start, as a pinned
-    ///         popup goes on showing it. Showing the plugin's popup again while it's pinned keeps it pinned, where it was.
+    ///         Users can pin a popup with the pin next to its title. It then stays on top where they drag it, and <see cref="CommandBuilder.ClosesPopup"/> and <see cref="ClosePopup"/> leave it open.
+    ///         Before closing, set what it shows next, such as what's running after Start, as a pinned popup keeps showing it. Showing the plugin's popup again while it's pinned keeps it pinned in place.
     ///     </para>
     /// </remarks>
     /// <example>
     ///     <code>
     ///     context.AddQuickAction("Add a note", Glyph.Edit, action => action.ShowPopup("Add a note", popup => popup
     ///         .TextBox("Note", note)
-    ///         .Command("Add", AddAsync, command => command.Default().Closes())));
+    ///         .Command("Add", AddAsync, command => command.IsDefault().ClosesPopup())));
     ///     </code>
     /// </example>
     /// <param name="title">The popup's title, such as <c>Track time</c>.</param>
@@ -85,9 +82,8 @@ public interface IActionContext
     public void ShowPopup(string title, Action<PopupBuilder> build);
 
     /// <summary>
-    ///     Closes the plugin's popup, if it's open, as a command does that only closes it sometimes, such as Start when
-    ///     nothing else runs. For a command that always closes it, <see cref="CommandBuilder.Closes"/> is shorter. A popup
-    ///     the user pinned stays open.
+    ///     Closes the plugin's popup if it's open, for a command that only closes it in some cases, such as Start when nothing else runs.
+    ///     For a command that always closes it, use <see cref="CommandBuilder.ClosesPopup"/>. A popup the user pinned stays open.
     /// </summary>
     public void ClosePopup();
 }

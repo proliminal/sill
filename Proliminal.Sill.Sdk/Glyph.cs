@@ -3,36 +3,11 @@ using System.Globalization;
 namespace Proliminal.Sill.Sdk;
 
 /// <summary>
-///     An icon from Segoe Fluent Icons, the icon font Windows 11 and its Settings app use. Windows 10 falls back to Segoe
-///     MDL2 Assets, which has the same code points. The well-known icons are properties; any other is
-///     <see cref="FromCodepoint"/>.
+///     Represents an icon from Segoe Fluent Icons, the icon font Windows 11 and its Settings app use.
+///     Windows 10 uses Segoe MDL2 Assets, which has the same codepoints.
 /// </summary>
 public readonly record struct Glyph
 {
-    private Glyph(string text)
-        => Text = text;
-
-    /// <summary>
-    ///     The character that draws the icon in the icon font.
-    /// </summary>
-    public string Text { get; }
-
-    /// <summary>
-    ///     An icon by its code point, as listed in Microsoft's Segoe Fluent Icons reference, such as <c>0xE713</c>.
-    /// </summary>
-    /// <param name="codepoint">The code point, from the Private Use Area the font uses.</param>
-    public static Glyph FromCodepoint(int codepoint)
-    {
-        if (codepoint is < 0xE000 or > 0xF8FF)
-            throw new ArgumentOutOfRangeException(nameof(codepoint), $"0x{codepoint:X4} isn't an icon; Segoe Fluent Icons uses 0xE000 to 0xF8FF.");
-
-        return new(char.ConvertFromUtf32(codepoint));
-    }
-
-    /// <inheritdoc />
-    public override string ToString()
-        => Text is null ? "" : $"U+{char.ConvertToUtf32(Text, 0).ToString("X4", CultureInfo.InvariantCulture)}";
-
     /// <summary>A gear, for settings.</summary>
     public static Glyph Settings { get; } = FromCodepoint(0xE713);
 
@@ -245,4 +220,28 @@ public readonly record struct Glyph
 
     /// <summary>Two tools vertically aligned side by side.</summary>
     public static Glyph DeveloperTools { get; } = FromCodepoint(0xEC7A);
+
+    /// <summary>
+    ///     Gets the character that draws the icon in the icon font.
+    /// </summary>
+    public string Text { get; }
+
+    private Glyph(string text)
+        => Text = text;
+
+    /// <summary>
+    ///     Creates an icon by its code point, as listed in Microsoft's Segoe Fluent Icons reference, such as <c>0xE713</c>.
+    /// </summary>
+    /// <param name="codepoint">The code point, from the Private Use Area the font uses.</param>
+    public static Glyph FromCodepoint(int codepoint)
+    {
+        if (codepoint is < 0xE000 or > 0xF8FF)
+            throw new ArgumentOutOfRangeException(nameof(codepoint), $"0x{codepoint:X4} isn't an icon; Segoe Fluent Icons uses 0xE000 to 0xF8FF.");
+
+        return new(char.ConvertFromUtf32(codepoint));
+    }
+
+    /// <inheritdoc />
+    public override string ToString()
+        => Text is null ? "" : $"U+{char.ConvertToUtf32(Text, 0).ToString("X4", CultureInfo.InvariantCulture)}";
 }

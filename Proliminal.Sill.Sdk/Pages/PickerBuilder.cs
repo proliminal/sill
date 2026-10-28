@@ -1,13 +1,15 @@
 using Proliminal.Sill.Sdk.Abstractions;
 using Proliminal.Sill.Sdk.Pages.Abstractions;
 using Proliminal.Sill.Sdk.Pages.Model;
+using Proliminal.Sill.Sdk.Values;
 
 namespace Proliminal.Sill.Sdk.Pages;
 
 /// <summary>
-///     Sets up a card with a dropdown. See <see cref="CardsBuilder{TSelf}.Picker"/>.
+///     Represents a builder for a card with a dropdown.
+///     See <see cref="CardsBuilder{TSelf}.Picker"/>.
 /// </summary>
-/// <typeparam name="T">The type of the options' values.</typeparam>
+/// <typeparam name="T">The type of the option values.</typeparam>
 public sealed class PickerBuilder<T> : CardBuilder<PickerBuilder<T>>
 {
     private readonly string _title;
@@ -19,10 +21,10 @@ public sealed class PickerBuilder<T> : CardBuilder<PickerBuilder<T>>
         => _title = title;
 
     /// <summary>
-    ///     Adds an option to the dropdown, below the ones added before.
+    ///     Adds an option to the dropdown, below the options added before it.
     /// </summary>
-    /// <param name="value">The value chosen with it.</param>
-    /// <param name="label">The text shown for it.</param>
+    /// <param name="value">The value the option stands for.</param>
+    /// <param name="label">The text shown for the option.</param>
     public PickerBuilder<T> Option(T value, string label)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(label);
@@ -38,16 +40,16 @@ public sealed class PickerBuilder<T> : CardBuilder<PickerBuilder<T>>
     }
 
     /// <summary>
-    ///     Takes the dropdown's options from <paramref name="options"/>, which can change, such as the fonts that are
-    ///     installed. Use it instead of <see cref="Option"/>.
+    ///     Takes the options of the dropdown from <paramref name="options"/>, which can change, such as the installed fonts.
+    ///     Use it instead of <see cref="Option"/>.
     /// </summary>
     /// <example>
     ///     <code>
-    ///     .Options(Values.External(GetInstalledFonts), font => font ?? "Same as other profiles")
+    ///     .Options(Value.External(GetInstalledFonts), font => font ?? "Same as other profiles")
     ///     </code>
     /// </example>
-    /// <param name="options">The options' values, in order.</param>
-    /// <param name="label">The text shown for a value.</param>
+    /// <param name="options">The option values, in order.</param>
+    /// <param name="label">Gets the text shown for a value.</param>
     public PickerBuilder<T> Options(IReadOnlyValue<IReadOnlyList<T>> options, Func<T, string> label)
     {
         ArgumentNullException.ThrowIfNull(options);

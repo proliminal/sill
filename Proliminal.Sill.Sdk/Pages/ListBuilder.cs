@@ -5,9 +5,10 @@ using Proliminal.Sill.Sdk.Pages.Model;
 namespace Proliminal.Sill.Sdk.Pages;
 
 /// <summary>
-///     Sets up a list's rows: their description, icon and buttons. See <see cref="CardsBuilder{TSelf}.List"/>.
+///     Represents a builder for the rows of a list: their description, icon and buttons.
+///     See <see cref="CardsBuilder{TSelf}.List"/>.
 /// </summary>
-/// <typeparam name="T">The type of the list's items.</typeparam>
+/// <typeparam name="T">The type of the list items.</typeparam>
 public sealed class ListBuilder<T>
 {
     private readonly List<(Glyph Icon, string Label, Func<T, IActionContext, Task> OnClick, ListActionBuilder<T> Builder)> _actions = [];
@@ -20,10 +21,9 @@ public sealed class ListBuilder<T>
     }
 
     /// <summary>
-    ///     Shows what <paramref name="description"/> returns under a row's title, or nothing when it returns
-    ///     <see langword="null"/>.
+    ///     Shows the text that <paramref name="description"/> returns under the title of a row, or nothing when it returns <see langword="null"/>.
     /// </summary>
-    /// <param name="description">The text for an item.</param>
+    /// <param name="description">Gets the text for an item.</param>
     public ListBuilder<T> Description(Func<T, string?> description)
     {
         _description = description ?? throw new ArgumentNullException(nameof(description));
@@ -31,10 +31,9 @@ public sealed class ListBuilder<T>
     }
 
     /// <summary>
-    ///     Shows the icon <paramref name="icon"/> returns left of a row's title, or none when it returns
-    ///     <see langword="null"/>.
+    ///     Shows the icon that <paramref name="icon"/> returns left of the title of a row, or none when it returns <see langword="null"/>.
     /// </summary>
-    /// <param name="icon">The icon for an item.</param>
+    /// <param name="icon">Gets the icon for an item.</param>
     public ListBuilder<T> Icon(Func<T, Glyph?> icon)
     {
         _icon = icon ?? throw new ArgumentNullException(nameof(icon));
@@ -42,7 +41,7 @@ public sealed class ListBuilder<T>
     }
 
     /// <summary>
-    ///     Adds a small icon button to every row, right of the ones added before.
+    ///     Adds a small icon button to every row, right of the buttons added before it.
     /// </summary>
     /// <example>
     ///     <code>
@@ -50,9 +49,9 @@ public sealed class ListBuilder<T>
     ///         .EnabledWhen(isIdle))
     ///     </code>
     /// </example>
-    /// <param name="icon">The button's icon.</param>
-    /// <param name="label">What it does, shown as its tooltip and read out by screen readers.</param>
-    /// <param name="onClick">What it does for a row's item. The button is disabled until its task is done.</param>
+    /// <param name="icon">The button icon.</param>
+    /// <param name="label">What the button does, shown as its tooltip and read out by screen readers.</param>
+    /// <param name="onClick">What the button does for the item of a row. The button is disabled until the returned task completes.</param>
     /// <param name="build">Sets when the button is enabled.</param>
     public ListBuilder<T> Action(Glyph icon, string label, Func<T, IActionContext, Task> onClick, Action<ListActionBuilder<T>>? build = null)
     {
@@ -69,14 +68,7 @@ public sealed class ListBuilder<T>
         return this;
     }
 
-    /// <summary>
-    ///     Adds a button whose action is done right away.
-    ///     See <see cref="Action(Glyph, string, Func{T, IActionContext, Task}, Action{ListActionBuilder{T}}?)"/>.
-    /// </summary>
-    /// <param name="icon">The button's icon.</param>
-    /// <param name="label">What it does, shown as its tooltip and read out by screen readers.</param>
-    /// <param name="onClick">What it does for a row's item.</param>
-    /// <param name="build">Sets when the button is enabled.</param>
+    /// <inheritdoc cref="Action(Glyph, string, Func{T, IActionContext, Task}, Action{ListActionBuilder{T}}?)"/>
     public ListBuilder<T> Action(Glyph icon, string label, Action<T, IActionContext> onClick, Action<ListActionBuilder<T>>? build = null)
     {
         ArgumentNullException.ThrowIfNull(onClick);
@@ -89,7 +81,7 @@ public sealed class ListBuilder<T>
     }
 
     /// <summary>
-    ///     Only shows the list while <paramref name="condition"/> is <see langword="true"/>.
+    ///     Shows the list only while <paramref name="condition"/> is <see langword="true"/>.
     /// </summary>
     /// <param name="condition">When the list is shown.</param>
     public ListBuilder<T> VisibleWhen(IReadOnlyValue<bool> condition)

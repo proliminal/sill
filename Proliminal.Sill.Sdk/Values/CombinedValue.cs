@@ -1,10 +1,7 @@
 using Proliminal.Sill.Sdk.Abstractions;
 
-namespace Proliminal.Sill.Sdk;
+namespace Proliminal.Sill.Sdk.Values;
 
-/// <summary>
-///     A value computed from two others. Created by <see cref="ValueExtensions.Combine"/>.
-/// </summary>
 internal sealed class CombinedValue<T1, T2, TResult>(IReadOnlyValue<T1> first, IReadOnlyValue<T2> second, Func<T1, T2, TResult> combine)
     : IReadOnlyValue<TResult>
 {

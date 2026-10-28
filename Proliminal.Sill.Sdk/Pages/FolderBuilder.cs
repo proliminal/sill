@@ -5,7 +5,8 @@ using Proliminal.Sill.Sdk.Pages.Model;
 namespace Proliminal.Sill.Sdk.Pages;
 
 /// <summary>
-///     Sets up a card that picks a folder. See <see cref="CardsBuilder{TSelf}.Folder"/>.
+///     Represents a builder for a card that picks a folder.
+///     See <see cref="CardsBuilder{TSelf}.Folder"/>.
 /// </summary>
 public sealed class FolderBuilder : CardBuilder<FolderBuilder>
 {
@@ -16,10 +17,9 @@ public sealed class FolderBuilder : CardBuilder<FolderBuilder>
         => _dialogTitle = title;
 
     /// <summary>
-    ///     Titles the window that picks a folder with <paramref name="title"/>, such as <c>Save images to</c>. By default
-    ///     it's the card's title.
+    ///     Sets the title of the folder picker window, such as <c>Save images to</c>. By default, it's the card's title.
     /// </summary>
-    /// <param name="title">The window's title.</param>
+    /// <param name="title">The window title.</param>
     public FolderBuilder DialogTitle(string title)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(title);

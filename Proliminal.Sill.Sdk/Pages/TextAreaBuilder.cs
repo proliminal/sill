@@ -5,8 +5,8 @@ using Proliminal.Sill.Sdk.Pages.Model;
 namespace Proliminal.Sill.Sdk.Pages;
 
 /// <summary>
-///     Sets up a card with a box for text of several lines. See
-///     <see cref="CardsBuilder{TSelf}.TextArea(string, IValue{string}, Action{TextAreaBuilder}?)"/>.
+///     Represents a builder for a card with a multi-line text box.
+///     See <see cref="CardsBuilder{TSelf}.TextArea(string, IValue{string}, Action{TextAreaBuilder}?)"/>.
 /// </summary>
 public sealed class TextAreaBuilder : TextCardBuilder<TextAreaBuilder>
 {
@@ -18,9 +18,9 @@ public sealed class TextAreaBuilder : TextCardBuilder<TextAreaBuilder>
     }
 
     /// <summary>
-    ///     Makes the box <paramref name="lines"/> lines high; longer text scrolls. By default it's 4.
+    ///     Sets the height of the box to <paramref name="lines"/> lines; longer text scrolls. By default, it's 4.
     /// </summary>
-    /// <param name="lines">From 2 to 20.</param>
+    /// <param name="lines">The number of lines, from 2 to 20.</param>
     public TextAreaBuilder Lines(int lines)
     {
         if (lines is < 2 or > 20)

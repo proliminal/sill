@@ -1,10 +1,7 @@
 using Proliminal.Sill.Sdk.Abstractions;
 
-namespace Proliminal.Sill.Sdk;
+namespace Proliminal.Sill.Sdk.Values;
 
-/// <summary>
-///     A value kept outside Sill that cards only show. Created by <see cref="Values.External{T}(Func{T})"/>.
-/// </summary>
 internal sealed class ReadOnlyExternalValue<T>(Func<T> get) : IReadOnlyValue<T>
 {
     private T _value = get();

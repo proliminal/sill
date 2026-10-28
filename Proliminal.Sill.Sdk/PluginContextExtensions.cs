@@ -3,7 +3,7 @@ using Proliminal.Sill.Sdk.Abstractions;
 namespace Proliminal.Sill.Sdk;
 
 /// <summary>
-///     Shorthands for <see cref="IPluginContext"/>.
+///     A set of extension methods for <see cref="IPluginContext"/>.
 /// </summary>
 public static class PluginContextExtensions
 {

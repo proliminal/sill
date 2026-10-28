@@ -6,20 +6,16 @@ using Proliminal.Sill.Sdk.Pages.Model.Abstractions;
 namespace Proliminal.Sill.Sdk.Pages;
 
 /// <summary>
-///     Describes a popup: cards from top to bottom, as on a page, and commands in its footer that Enter or Ctrl and a
-///     letter press. Pass a lambda that uses it to <see cref="IActionContext.ShowPopup"/>.
+///     Represents a builder for a popup: cards from top to bottom, as on a page, and commands in its footer that Enter or a Ctrl shortcut press.
+///     Pass a lambda that uses it to <see cref="IActionContext.ShowPopup"/>.
+///     To ask for different things one after another, toggle cards and commands with <see cref="CardBuilder{TSelf}.VisibleWhen"/> and <see cref="CommandBuilder.VisibleWhen"/> on a <see cref="State{T}"/> that the commands change. When a command is done, the first visible box gets the focus.
 /// </summary>
-/// <remarks>
-///     A popup that asks for different things one after another, such as first what to start and later whether to stop
-///     it, shows them with <see cref="CardBuilder{TSelf}.VisibleWhen"/> and <see cref="CommandBuilder.VisibleWhen"/> on
-///     a <see cref="State{T}"/> its commands change: when a command is done, the first box that's shown gets the focus.
-/// </remarks>
 /// <example>
 ///     <code>
 ///     action.ShowPopup("Add a note", popup => popup
 ///         .TextBox("Note", note, text => text.Placeholder("What happened"))
 ///         .Message(error)
-///         .Command("Add", AddAsync, command => command.Default().Closes()));
+///         .Command("Add", AddAsync, command => command.IsDefault().ClosesPopup()));
 ///     </code>
 /// </example>
 public sealed class PopupBuilder : CardsBuilder<PopupBuilder>
@@ -34,9 +30,8 @@ public sealed class PopupBuilder : CardsBuilder<PopupBuilder>
     }
 
     /// <summary>
-    ///     Shows <paramref name="message"/> above the footer, such as what's wrong with what was typed. It's hidden while
-    ///     it's <see langword="null"/> or empty. What a command throws is shown there too, in red, until a command runs
-    ///     again.
+    ///     Shows <paramref name="message"/> above the footer, such as what's wrong with the input. It's hidden while it's <see langword="null"/> or empty.
+    ///     Errors thrown by a command are shown there too, in red, until a command runs again.
     /// </summary>
     /// <param name="message">A sentence or two.</param>
     public PopupBuilder Message(IReadOnlyValue<string?> message)
@@ -46,11 +41,11 @@ public sealed class PopupBuilder : CardsBuilder<PopupBuilder>
     }
 
     /// <summary>
-    ///     Shows <paramref name="message"/> above the footer in the color of <paramref name="tone"/>. See
-    ///     <see cref="Message(IReadOnlyValue{string?})"/>.
+    ///     Shows <paramref name="message"/> above the footer in the color of <paramref name="tone"/>.
+    ///     See <see cref="Message(IReadOnlyValue{string?})"/>.
     /// </summary>
     /// <param name="message">A sentence or two.</param>
-    /// <param name="tone">Its color; <see cref="Tone.Neutral"/> is the usual text color.</param>
+    /// <param name="tone">The message color. <see cref="Tone.Neutral"/> is the default text color.</param>
     public PopupBuilder Message(IReadOnlyValue<string?> message, IReadOnlyValue<Tone> tone)
     {
         ArgumentNullException.ThrowIfNull(message);
@@ -62,9 +57,9 @@ public sealed class PopupBuilder : CardsBuilder<PopupBuilder>
     }
 
     /// <summary>
-    ///     Puts cards side by side, each as wide as the others, such as a short box and a switch that would each take a
-    ///     full row otherwise. A card that's hidden, as with <see cref="CardBuilder{TSelf}.VisibleWhen"/>, leaves its width
-    ///     to the others. Keep it to cards with little in them: a popup is narrow.
+    ///     Adds cards side by side, each equally wide, such as a short box and a switch that would otherwise each take a full row.
+    ///     A hidden card, as with <see cref="CardBuilder{TSelf}.VisibleWhen"/>, leaves its width to the others.
+    ///     Use it only for small cards, as a popup is narrow.
     /// </summary>
     /// <example>
     ///     <code>
@@ -73,7 +68,7 @@ public sealed class PopupBuilder : CardsBuilder<PopupBuilder>
     ///         .Toggle("Billable", billable))
     ///     </code>
     /// </example>
-    /// <param name="build">Adds the cards, from left to right; two or more.</param>
+    /// <param name="build">Adds two or more cards, from left to right.</param>
     public PopupBuilder Row(Action<RowBuilder> build)
     {
         ArgumentNullException.ThrowIfNull(build);
@@ -86,21 +81,21 @@ public sealed class PopupBuilder : CardsBuilder<PopupBuilder>
     }
 
     /// <summary>
-    ///     Adds a button to the footer, right of the ones added before. While it runs, the popup stays open when it loses
-    ///     the focus, and its commands are disabled. If it throws, the error shows above the footer instead of as a
-    ///     notification, and the popup stays open.
+    ///     Adds a button to the footer, right of the buttons added before it.
+    ///     While it runs, the popup stays open when it loses focus, and its commands are disabled.
+    ///     If it throws, the error is shown above the footer instead of as a notification, and the popup stays open.
     /// </summary>
     /// <example>
     ///     <code>
     ///     .Command("Start", StartAsync, command => command
-    ///         .Default()
-    ///         .Closes()
-    ///         .VisibleWhen(isRunning.Not()))
+    ///         .IsDefault()
+    ///         .ClosesPopup()
+    ///         .VisibleWhen(isRunning.Invert()))
     ///     </code>
     /// </example>
-    /// <param name="label">The button's text, such as <c>Start</c>.</param>
-    /// <param name="run">What the button does. Boxes in the popup have their value set before it runs.</param>
-    /// <param name="build">Sets its key, whether it closes the popup, and when it's shown and enabled.</param>
+    /// <param name="label">The button text, such as <c>Start</c>.</param>
+    /// <param name="run">What the button does. The boxes in the popup have their values set before it runs.</param>
+    /// <param name="build">Sets the shortcut key, whether the command closes the popup, and when it's shown and enabled.</param>
     public PopupBuilder Command(string label, PluginAction run, Action<CommandBuilder>? build = null)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(label);
@@ -113,13 +108,7 @@ public sealed class PopupBuilder : CardsBuilder<PopupBuilder>
         return this;
     }
 
-    /// <summary>
-    ///     Adds a button to the footer whose action is done right away. See
-    ///     <see cref="Command(string, PluginAction, Action{CommandBuilder}?)"/>.
-    /// </summary>
-    /// <param name="label">The button's text, such as <c>Cancel</c>.</param>
-    /// <param name="run">What the button does.</param>
-    /// <param name="build">Sets its key, whether it closes the popup, and when it's shown and enabled.</param>
+    /// <inheritdoc cref="Command(string, PluginAction, Action{CommandBuilder}?)"/>
     public PopupBuilder Command(string label, Action<IActionContext> run, Action<CommandBuilder>? build = null)
     {
         ArgumentNullException.ThrowIfNull(run);
@@ -134,9 +123,6 @@ public sealed class PopupBuilder : CardsBuilder<PopupBuilder>
     private protected override void Add(PageElement element)
         => _elements.Add(element);
 
-    /// <summary>
-    ///     Describes a popup titled <paramref name="title"/> with <paramref name="build"/>.
-    /// </summary>
     internal static PopupModel Build(string title, Action<PopupBuilder> build)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(title);

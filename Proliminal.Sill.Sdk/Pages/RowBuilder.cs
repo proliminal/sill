@@ -5,7 +5,8 @@ using Proliminal.Sill.Sdk.Pages.Model.Abstractions;
 namespace Proliminal.Sill.Sdk.Pages;
 
 /// <summary>
-///     Adds cards side by side, from left to right. See <see cref="PopupBuilder.Row"/>.
+///     Represents a builder for cards side by side, from left to right.
+///     See <see cref="PopupBuilder.Row"/>.
 /// </summary>
 public sealed class RowBuilder : CardsBuilder<RowBuilder>
 {

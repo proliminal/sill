@@ -1,10 +1,7 @@
 using Proliminal.Sill.Sdk.Abstractions;
 
-namespace Proliminal.Sill.Sdk;
+namespace Proliminal.Sill.Sdk.Values;
 
-/// <summary>
-///     A value a read-only card shows, as a value cards take, which can't be set.
-/// </summary>
 internal sealed class DisplayedValue<T>(IReadOnlyValue<T> source) : IValue<T>
 {
     public T Value

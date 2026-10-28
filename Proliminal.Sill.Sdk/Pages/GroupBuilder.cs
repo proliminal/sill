@@ -6,7 +6,8 @@ using Proliminal.Sill.Sdk.Pages.Model.Abstractions;
 namespace Proliminal.Sill.Sdk.Pages;
 
 /// <summary>
-///     Adds the cards under a header. See <see cref="PageBuilder.Group"/>.
+///     Represents a builder for the cards under a header.
+///     See <see cref="PageBuilder.Group"/>.
 /// </summary>
 public sealed class GroupBuilder : CardsBuilder<GroupBuilder>
 {
@@ -19,7 +20,7 @@ public sealed class GroupBuilder : CardsBuilder<GroupBuilder>
     }
 
     /// <summary>
-    ///     Only shows the header and its cards while <paramref name="condition"/> is <see langword="true"/>.
+    ///     Shows the header and its cards only while <paramref name="condition"/> is <see langword="true"/>.
     /// </summary>
     /// <param name="condition">When the group is shown.</param>
     public GroupBuilder VisibleWhen(IReadOnlyValue<bool> condition)
@@ -29,8 +30,7 @@ public sealed class GroupBuilder : CardsBuilder<GroupBuilder>
     }
 
     /// <summary>
-    ///     Only enables the cards' controls while <paramref name="condition"/> is <see langword="true"/>, such as while
-    ///     the app they change is installed.
+    ///     Enables the controls of the cards only while <paramref name="condition"/> is <see langword="true"/>, such as while the app they change is installed.
     /// </summary>
     /// <param name="condition">When the cards are enabled.</param>
     public GroupBuilder EnabledWhen(IReadOnlyValue<bool> condition)

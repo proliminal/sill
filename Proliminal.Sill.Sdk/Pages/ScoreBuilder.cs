@@ -6,9 +6,9 @@ using Proliminal.Sill.Sdk.Pages.Model;
 namespace Proliminal.Sill.Sdk.Pages;
 
 /// <summary>
-///     Sets up a score card: what its ring says, when it turns from red to yellow to green, and the recommendations that
-///     raise it. See <see cref="CardsBuilder{TSelf}.Score"/>. Its <see cref="Grade"/> is shown in bold under its title,
-///     followed by its <see cref="CardBuilder{TSelf}.Status(IReadOnlyValue{string?})"/>, and its description under that.
+///     Represents a builder for a score card: the text in its ring, the thresholds at which it turns from red to yellow to green, and the recommendations that raise it.
+///     The <see cref="Grade"/> is shown in bold under the title, followed by the <see cref="CardBuilder{TSelf}.Status(IReadOnlyValue{string?})"/>, with the description below.
+///     See <see cref="CardsBuilder{TSelf}.Score"/>.
 /// </summary>
 public sealed class ScoreBuilder : CardBuilder<ScoreBuilder>
 {
@@ -25,9 +25,9 @@ public sealed class ScoreBuilder : CardBuilder<ScoreBuilder>
     }
 
     /// <summary>
-    ///     Sets the text in the middle of the ring. A percentage by default.
+    ///     Sets the text in the middle of the ring. By default, it's a percentage.
     /// </summary>
-    /// <param name="format">The text for a score from 0 to 1.</param>
+    /// <param name="format">Gets the text for a score from 0 to 1.</param>
     public ScoreBuilder Format(Func<double, string> format)
     {
         _format = format ?? throw new ArgumentNullException(nameof(format));
@@ -35,8 +35,7 @@ public sealed class ScoreBuilder : CardBuilder<ScoreBuilder>
     }
 
     /// <summary>
-    ///     Sets a word for the score, such as <c>Good</c>, shown in bold before the status, so it reads as the score's
-    ///     grade rather than as part of a sentence.
+    ///     Sets a word for the score, such as <c>Good</c>, shown in bold before the status so it reads as a grade rather than as part of a sentence.
     /// </summary>
     /// <param name="grade">The grade, or <see langword="null"/> or empty for none.</param>
     public ScoreBuilder Grade(IReadOnlyValue<string?> grade)
@@ -46,7 +45,7 @@ public sealed class ScoreBuilder : CardBuilder<ScoreBuilder>
     }
 
     /// <summary>
-    ///     Sets from which score the ring is green, and from which it's yellow rather than red. 0.6 and 0.3 by default.
+    ///     Sets the lowest score at which the ring is green, and the lowest at which it's yellow rather than red. By default, these are 0.6 and 0.3.
     /// </summary>
     /// <param name="good">The lowest score that's green.</param>
     /// <param name="fair">The lowest score that's yellow.</param>
@@ -61,10 +60,10 @@ public sealed class ScoreBuilder : CardBuilder<ScoreBuilder>
     }
 
     /// <summary>
-    ///     Lists what would raise the score under the card, each with a button that applies it. The first few are shown,
-    ///     the rest behind Show all. The list is hidden while it's empty.
+    ///     Lists the recommendations that would raise the score under the card, each with a button that applies it.
+    ///     The first few are shown, and the rest are behind Show all. The list is hidden while it's empty.
     /// </summary>
-    /// <param name="recommendations">The recommendations not applied yet, most important first.</param>
+    /// <param name="recommendations">The recommendations that aren't applied yet, most important first.</param>
     public ScoreBuilder Recommendations(IReadOnlyValue<IReadOnlyList<ScoreRecommendation>> recommendations)
     {
         _recommendations = recommendations ?? throw new ArgumentNullException(nameof(recommendations));
@@ -72,11 +71,11 @@ public sealed class ScoreBuilder : CardBuilder<ScoreBuilder>
     }
 
     /// <summary>
-    ///     Adds a prominent button right of the score, such as Apply all, shown while there are
-    ///     <see cref="Recommendations"/>, or always without them.
+    ///     Adds a prominent button right of the score, such as Apply all.
+    ///     It's shown while there are <see cref="Recommendations"/>, or always when none are set.
     /// </summary>
-    /// <param name="label">The button's text.</param>
-    /// <param name="onClick">What the button does. The button is disabled until its task is done.</param>
+    /// <param name="label">The button text.</param>
+    /// <param name="onClick">What the button does. The button is disabled until the returned task completes.</param>
     public ScoreBuilder ApplyAll(string label, PluginAction onClick)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(label);
@@ -86,11 +85,7 @@ public sealed class ScoreBuilder : CardBuilder<ScoreBuilder>
         return this;
     }
 
-    /// <summary>
-    ///     Adds a prominent button whose action is done right away. See <see cref="ApplyAll(string, PluginAction)"/>.
-    /// </summary>
-    /// <param name="label">The button's text.</param>
-    /// <param name="onClick">What the button does.</param>
+    /// <inheritdoc cref="ApplyAll(string, PluginAction)"/>
     public ScoreBuilder ApplyAll(string label, Action<IActionContext> onClick)
     {
         ArgumentNullException.ThrowIfNull(onClick);

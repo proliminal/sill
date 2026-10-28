@@ -5,7 +5,8 @@ using Proliminal.Sill.Sdk.Pages.Model;
 namespace Proliminal.Sill.Sdk.Pages;
 
 /// <summary>
-///     Sets up a card with a slider. See <see cref="CardsBuilder{TSelf}.Slider(string, IValue{double}, double, double, Action{SliderBuilder}?)"/>.
+///     Represents a builder for a card with a slider.
+///     See <see cref="CardsBuilder{TSelf}.Slider(string, IValue{double}, double, double, Action{SliderBuilder}?)"/>.
 /// </summary>
 public sealed class SliderBuilder : CardBuilder<SliderBuilder>
 {
@@ -27,9 +28,9 @@ public sealed class SliderBuilder : CardBuilder<SliderBuilder>
     }
 
     /// <summary>
-    ///     Snaps the slider to multiples of <paramref name="step"/> from the minimum. 0 lets it move freely.
+    ///     Snaps the slider to multiples of <paramref name="step"/> from the minimum. A step of 0 lets it move freely.
     /// </summary>
-    /// <param name="step">The distance between the numbers the slider can be at.</param>
+    /// <param name="step">The distance between the values the slider can take.</param>
     public SliderBuilder Step(double step)
     {
         if (!double.IsFinite(step) || step < 0 || step > _maximum - _minimum)
@@ -40,10 +41,9 @@ public sealed class SliderBuilder : CardBuilder<SliderBuilder>
     }
 
     /// <summary>
-    ///     Shows the number next to the slider as <paramref name="format"/> returns it, such as <c>50%</c>. By default
-    ///     it's shown with up to two decimals.
+    ///     Sets how the number next to the slider is shown, such as <c>50%</c>. By default, it's shown with up to two decimals.
     /// </summary>
-    /// <param name="format">Turns a number into text.</param>
+    /// <param name="format">Converts a number to text.</param>
     public SliderBuilder Format(Func<double, string> format)
     {
         _format = format ?? throw new ArgumentNullException(nameof(format));

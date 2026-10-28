@@ -1,8 +1,10 @@
+using Proliminal.Sill.Sdk.Pages;
+
 namespace Proliminal.Sill.Sdk;
 
 /// <summary>
-///     Something that raises a score, shown under a score card with a button that applies it, as Windows Settings shows
-///     energy recommendations. See <see cref="Pages.ScoreBuilder.Recommendations"/>.
+///     Represents something that raises a score, shown under a score card with a button that applies it, as Windows Settings shows
+///     energy recommendations. See <see cref="ScoreBuilder.Recommendations"/>.
 /// </summary>
 /// <param name="Title">What it is, such as <c>Personalized ads</c>.</param>
 /// <param name="ActionLabel">The text of the button that applies it, such as <c>Turn off</c>.</param>

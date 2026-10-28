@@ -5,8 +5,8 @@ using Proliminal.Sill.Sdk.Pages.Model;
 namespace Proliminal.Sill.Sdk.Pages;
 
 /// <summary>
-///     Sets when an extra button on a card is shown and enabled. See
-///     <see cref="CardBuilder{TSelf}.Action(string, PluginAction, Action{ActionBuilder}?)"/>.
+///     Represents a builder that sets when an extra button on a card is shown and enabled.
+///     See <see cref="CardBuilder{TSelf}.Action(string, PluginAction, Action{ActionBuilder}?)"/>.
 /// </summary>
 public sealed class ActionBuilder
 {
@@ -18,8 +18,7 @@ public sealed class ActionBuilder
     }
 
     /// <summary>
-    ///     Only shows the button while <paramref name="condition"/> is <see langword="true"/>, such as an Install button
-    ///     while what it installs is missing.
+    ///     Shows the button only while <paramref name="condition"/> is <see langword="true"/>, such as an Install button while the app it installs is missing.
     /// </summary>
     /// <param name="condition">When the button is shown.</param>
     public ActionBuilder VisibleWhen(IReadOnlyValue<bool> condition)
@@ -29,8 +28,8 @@ public sealed class ActionBuilder
     }
 
     /// <summary>
-    ///     Only enables the button while <paramref name="condition"/> is <see langword="true"/>. It's also disabled while
-    ///     its action runs.
+    ///     Enables the button only while <paramref name="condition"/> is <see langword="true"/>.
+    ///     The button is also disabled while its action runs.
     /// </summary>
     /// <param name="condition">When the button is enabled.</param>
     public ActionBuilder EnabledWhen(IReadOnlyValue<bool> condition)

@@ -1,10 +1,7 @@
 using Proliminal.Sill.Sdk.Abstractions;
 
-namespace Proliminal.Sill.Sdk;
+namespace Proliminal.Sill.Sdk.Values;
 
-/// <summary>
-///     A value that never changes, such as a description given as text.
-/// </summary>
 internal sealed class ConstantValue<T>(T value) : IReadOnlyValue<T>
 {
     public T Value

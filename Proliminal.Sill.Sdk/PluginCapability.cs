@@ -1,9 +1,8 @@
 namespace Proliminal.Sill.Sdk;
 
 /// <summary>
-///     Something a plugin's code can do that people want to know about before they load it. Declare the ones your plugin
-///     uses with <see cref="PluginUsesAttribute"/>; Sill also looks for them in the plugin's code, and points out the ones
-///     it finds that aren't declared.
+///     Represents what a plugin's code can do that people want to know about before they load it.
+///     Declare the ones your plugin uses with <see cref="PluginUsesAttribute"/>.
 /// </summary>
 public enum PluginCapability
 {

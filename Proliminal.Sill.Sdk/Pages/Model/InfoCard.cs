@@ -4,8 +4,8 @@ using Proliminal.Sill.Sdk.Pages.Model.Abstractions;
 namespace Proliminal.Sill.Sdk.Pages.Model;
 
 /// <summary>
-///     A card without a control of its own: only its status and extra buttons, if any, such as whether something is
-///     installed and a button that installs it.
+///     Represents a card without a control of its own, showing only its status and extra buttons, if any.
+///     For example, whether something is installed, and a button that installs it.
 /// </summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
 public sealed class InfoCard : CardElement

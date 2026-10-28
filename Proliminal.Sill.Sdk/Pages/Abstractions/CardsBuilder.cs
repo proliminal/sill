@@ -1,13 +1,13 @@
 using Proliminal.Sill.Sdk.Abstractions;
 using Proliminal.Sill.Sdk.Pages.Model;
 using Proliminal.Sill.Sdk.Pages.Model.Abstractions;
+using Proliminal.Sill.Sdk.Values;
 
 namespace Proliminal.Sill.Sdk.Pages.Abstractions;
 
 /// <summary>
-///     Adds cards, from top to bottom: to a page with <see cref="PageBuilder"/>, or under a header with
-///     <see cref="GroupBuilder"/>. Each card takes what it can't do without as arguments, and everything else, such as
-///     its icon and description, through its builder.
+///     Represents a builder that adds cards from top to bottom, to a page with <see cref="PageBuilder"/> or under a header with <see cref="GroupBuilder"/>.
+///     Each card takes what it requires as arguments, and everything else, such as its icon and description, through its own builder.
 /// </summary>
 /// <typeparam name="TSelf">The builder itself, so calls can be chained.</typeparam>
 public abstract class CardsBuilder<TSelf>
@@ -16,6 +16,8 @@ public abstract class CardsBuilder<TSelf>
     private protected CardsBuilder()
     {
     }
+
+    #region Buttons
 
     /// <summary>
     ///     Adds a card with a button.
@@ -39,26 +41,6 @@ public abstract class CardsBuilder<TSelf>
     }
 
     /// <summary>
-    ///     Adds a card with a button whose text changes with <paramref name="label"/>, such as from "Check for updates" to
-    ///     "Update". See <see cref="Button(string, string, PluginAction, Action{ButtonBuilder}?)"/>.
-    /// </summary>
-    /// <param name="title">The card's title.</param>
-    /// <param name="label">The button's text.</param>
-    /// <param name="onClick">What the button does. The button is disabled until its task is done.</param>
-    /// <param name="build">Sets the card's icon, description and conditions.</param>
-    public TSelf Button(string title, IReadOnlyValue<string> label, PluginAction onClick, Action<ButtonBuilder>? build = null)
-    {
-        ArgumentNullException.ThrowIfNull(label);
-        ArgumentNullException.ThrowIfNull(onClick);
-
-        var builder = new ButtonBuilder(title);
-        build?.Invoke(builder);
-
-        Add(new ButtonCard(builder.Info, label, onClick));
-        return Self;
-    }
-
-    /// <summary>
     ///     Adds a card with a button whose action is done right away.
     ///     See <see cref="Button(string, string, PluginAction, Action{ButtonBuilder}?)"/>.
     /// </summary>
@@ -76,6 +58,30 @@ public abstract class CardsBuilder<TSelf>
             return Task.CompletedTask;
         }, build);
     }
+
+    /// <summary>
+    ///     Adds a card with a button whose text changes with <paramref name="label"/>, such as from "Check for updates" to "Update".
+    ///     See <see cref="Button(string, string, PluginAction, Action{ButtonBuilder}?)"/>.
+    /// </summary>
+    /// <param name="title">The card's title.</param>
+    /// <param name="label">The button's text.</param>
+    /// <param name="onClick">What the button does. The button is disabled until its task is done.</param>
+    /// <param name="build">Sets the card's icon, description and conditions.</param>
+    public TSelf Button(string title, IReadOnlyValue<string> label, PluginAction onClick, Action<ButtonBuilder>? build = null)
+    {
+        ArgumentNullException.ThrowIfNull(label);
+        ArgumentNullException.ThrowIfNull(onClick);
+
+        var builder = new ButtonBuilder(title);
+        build?.Invoke(builder);
+
+        Add(new ButtonCard(builder.Info, label, onClick));
+        return Self;
+    }
+
+    #endregion
+
+    #region Choices
 
     /// <summary>
     ///     Adds a card with an on/off switch.
@@ -102,8 +108,8 @@ public abstract class CardsBuilder<TSelf>
     }
 
     /// <summary>
-    ///     Adds a card with a slider from <paramref name="minimum"/> to <paramref name="maximum"/>. The value changes
-    ///     when the slider is let go, not while it's dragged.
+    ///     Adds a card with a slider from <paramref name="minimum"/> to <paramref name="maximum"/>.
+    ///     The value changes when the slider is released, not while it's dragged.
     /// </summary>
     /// <example>
     ///     <code>
@@ -116,7 +122,7 @@ public abstract class CardsBuilder<TSelf>
     /// <param name="value">The number the slider is at.</param>
     /// <param name="minimum">The lowest number.</param>
     /// <param name="maximum">The highest number.</param>
-    /// <param name="build">Sets the card's icon, description, conditions, steps and how the number is shown.</param>
+    /// <param name="build">Sets the card's icon, description, conditions, step and how the number is shown.</param>
     public TSelf Slider(string title, IValue<double> value, double minimum, double maximum, Action<SliderBuilder>? build = null)
     {
         ArgumentNullException.ThrowIfNull(value);
@@ -129,15 +135,14 @@ public abstract class CardsBuilder<TSelf>
     }
 
     /// <summary>
-    ///     Adds a card with a slider over whole numbers, which snaps to every number unless
-    ///     <see cref="SliderBuilder.Step"/> says otherwise.
+    ///     Adds a card with a slider over whole numbers, which snaps to every number unless <see cref="SliderBuilder.Step"/> sets otherwise.
     ///     See <see cref="Slider(string, IValue{double}, double, double, Action{SliderBuilder}?)"/>.
     /// </summary>
     /// <param name="title">The card's title.</param>
     /// <param name="value">The number the slider is at.</param>
     /// <param name="minimum">The lowest number.</param>
     /// <param name="maximum">The highest number.</param>
-    /// <param name="build">Sets the card's icon, description, conditions, steps and how the number is shown.</param>
+    /// <param name="build">Sets the card's icon, description, conditions, step and how the number is shown.</param>
     public TSelf Slider(string title, IValue<int> value, int minimum, int maximum, Action<SliderBuilder>? build = null)
     {
         ArgumentNullException.ThrowIfNull(value);
@@ -160,6 +165,7 @@ public abstract class CardsBuilder<TSelf>
     ///         .Option(SaveLocation.Custom, "Custom folder"))
     ///     </code>
     /// </example>
+    /// <typeparam name="T">The type of the options' values.</typeparam>
     /// <param name="title">The card's title.</param>
     /// <param name="value">The chosen option's value.</param>
     /// <param name="build">Adds the options and sets the card's icon, description and conditions.</param>
@@ -200,10 +206,38 @@ public abstract class CardsBuilder<TSelf>
     }
 
     /// <summary>
-    ///     Adds a card with a box for text of several lines, under its description and as wide as the card. The value
-    ///     changes when the box loses focus, not while typing, and Esc puts back what it was; see
-    ///     <see cref="TextCardBuilder{TSelf}.WhileTyping"/> for a box whose value changes with each key, and
-    ///     the overload that takes an <see cref="IReadOnlyValue{T}"/> for one that only shows a result.
+    ///     Adds a card that shows a folder under its description, with a Browse button that picks another one.
+    /// </summary>
+    /// <example>
+    ///     <code>
+    ///     .Folder("Custom folder", customFolder, folder => folder
+    ///         .Icon(Glyph.Folder)
+    ///         .Description("Used when saving images to a custom folder.")
+    ///         .DialogTitle("Save images to"))
+    ///     </code>
+    /// </example>
+    /// <param name="title">The card's title.</param>
+    /// <param name="value">The folder's path.</param>
+    /// <param name="build">Sets the card's icon, description, conditions and the title of the window that picks the folder.</param>
+    public TSelf Folder(string title, IValue<string> value, Action<FolderBuilder>? build = null)
+    {
+        ArgumentNullException.ThrowIfNull(value);
+
+        var builder = new FolderBuilder(title);
+        build?.Invoke(builder);
+
+        Add(builder.Build(value));
+        return Self;
+    }
+
+    #endregion
+
+    #region Text
+
+    /// <summary>
+    ///     Adds a card with a multi-line text box, under its description and as wide as the card.
+    ///     The value changes when the box loses focus, not while typing, and Esc restores the previous text.
+    ///     See <see cref="TextCardBuilder{TSelf}.ChangesWhileTyping"/> for a box whose value changes on every key press, and the overload that takes an <see cref="IReadOnlyValue{T}"/> for one that only shows a result.
     /// </summary>
     /// <example>
     ///     <code>
@@ -217,10 +251,7 @@ public abstract class CardsBuilder<TSelf>
     /// </example>
     /// <param name="title">The card's title.</param>
     /// <param name="value">The text, with lines separated by <c>\n</c>.</param>
-    /// <param name="build">
-    ///     Sets the card's icon, description, conditions, placeholder, height, limit and font, and whether it changes
-    ///     while typing or is read-only.
-    /// </param>
+    /// <param name="build">Sets the card's icon, description, conditions, placeholder, height, limit and font, and whether it changes while typing or is read-only.</param>
     public TSelf TextArea(string title, IValue<string> value, Action<TextAreaBuilder>? build = null)
     {
         ArgumentNullException.ThrowIfNull(value);
@@ -233,9 +264,8 @@ public abstract class CardsBuilder<TSelf>
     }
 
     /// <summary>
-    ///     Adds a card with a box that only shows <paramref name="value"/>, to select and copy, such as a result worked
-    ///     out from what's typed elsewhere on the page. See
-    ///     <see cref="TextArea(string, IValue{string}, Action{TextAreaBuilder}?)"/>.
+    ///     Adds a card with a multi-line text box that only shows <paramref name="value"/>, to select and copy, such as a result computed from what's typed elsewhere on the page.
+    ///     See <see cref="TextArea(string, IValue{string}, Action{TextAreaBuilder}?)"/>.
     /// </summary>
     /// <example>
     ///     <code>
@@ -259,9 +289,8 @@ public abstract class CardsBuilder<TSelf>
     }
 
     /// <summary>
-    ///     Adds a card with a box for one line of text, under its description and as wide as the card, such as a search
-    ///     or a pattern. It changes as a <see cref="TextArea(string, IValue{string}, Action{TextAreaBuilder}?)"/>
-    ///     does: when the box loses focus, or with <see cref="TextCardBuilder{TSelf}.WhileTyping"/> with each key.
+    ///     Adds a card with a single-line text box, under its description and as wide as the card, such as for a search or a pattern.
+    ///     Its value changes as with <see cref="TextArea(string, IValue{string}, Action{TextAreaBuilder}?)"/>: when the box loses focus, or on every key press with <see cref="TextCardBuilder{TSelf}.ChangesWhileTyping"/>.
     /// </summary>
     /// <example>
     ///     <code>
@@ -269,15 +298,12 @@ public abstract class CardsBuilder<TSelf>
     ///         .Icon(Glyph.Search)
     ///         .Placeholder(@"^\d+$")
     ///         .Monospace()
-    ///         .WhileTyping())
+    ///         .ChangesWhileTyping())
     ///     </code>
     /// </example>
     /// <param name="title">The card's title.</param>
     /// <param name="value">The text, without line breaks.</param>
-    /// <param name="build">
-    ///     Sets the card's icon, description, conditions, placeholder, limit and font, and whether it changes while
-    ///     typing or is read-only.
-    /// </param>
+    /// <param name="build">Sets the card's icon, description, conditions, placeholder, limit and font, and whether it changes while typing or is read-only.</param>
     public TSelf TextBox(string title, IValue<string> value, Action<TextBoxBuilder>? build = null)
     {
         ArgumentNullException.ThrowIfNull(value);
@@ -290,8 +316,8 @@ public abstract class CardsBuilder<TSelf>
     }
 
     /// <summary>
-    ///     Adds a card with a box of one line that only shows <paramref name="value"/>, to select and copy. See
-    ///     <see cref="TextBox(string, IValue{string}, Action{TextBoxBuilder}?)"/>.
+    ///     Adds a card with a single-line text box that only shows <paramref name="value"/>, to select and copy.
+    ///     See <see cref="TextBox(string, IValue{string}, Action{TextBoxBuilder}?)"/>.
     /// </summary>
     /// <param name="title">The card's title.</param>
     /// <param name="value">The text, without line breaks.</param>
@@ -307,30 +333,9 @@ public abstract class CardsBuilder<TSelf>
         return Self;
     }
 
-    /// <summary>
-    ///     Adds a card that shows a folder under its description, with a Browse button that picks another one.
-    /// </summary>
-    /// <example>
-    ///     <code>
-    ///     .Folder("Custom folder", customFolder, folder => folder
-    ///         .Icon(Glyph.Folder)
-    ///         .Description("Used when saving images to a custom folder.")
-    ///         .DialogTitle("Save images to"))
-    ///     </code>
-    /// </example>
-    /// <param name="title">The card's title.</param>
-    /// <param name="value">The folder's path.</param>
-    /// <param name="build">Sets the card's icon, description, conditions and the picking window's title.</param>
-    public TSelf Folder(string title, IValue<string> value, Action<FolderBuilder>? build = null)
-    {
-        ArgumentNullException.ThrowIfNull(value);
+    #endregion
 
-        var builder = new FolderBuilder(title);
-        build?.Invoke(builder);
-
-        Add(builder.Build(value));
-        return Self;
-    }
+    #region Information
 
     /// <summary>
     ///     Adds a card without a control of its own, which shows its status and extra buttons, if any.
@@ -340,7 +345,7 @@ public abstract class CardsBuilder<TSelf>
     ///     .Info("PowerShell 7", info => info
     ///         .Icon(Glyph.Code)
     ///         .Status(isInstalled.Map(installed => installed ? "Installed" : null))
-    ///         .Action("Install", InstallAsync, action => action.VisibleWhen(isInstalled.Not())))
+    ///         .Action("Install", InstallAsync, action => action.VisibleWhen(isInstalled.Invert())))
     ///     </code>
     /// </example>
     /// <param name="title">The card's title.</param>
@@ -355,35 +360,8 @@ public abstract class CardsBuilder<TSelf>
     }
 
     /// <summary>
-    ///     Adds a card that opens a subpage, as Windows Settings does for what's too much for the page itself, such as
-    ///     a history. The subpage is titled as the card, and its heading leads back to this page.
-    /// </summary>
-    /// <example>
-    ///     <code>
-    ///     .Subpage("Timeline", page => page
-    ///         .Timeline(entries, entry => entry.At, entry => entry.Title),
-    ///         card => card
-    ///             .Icon(Glyph.History)
-    ///             .Status(entries.Map(list => $"{list.Count}")))
-    ///     </code>
-    /// </example>
-    /// <param name="title">The card's title, and the subpage's.</param>
-    /// <param name="page">Describes the subpage, as <see cref="IPluginContext.SetPage(Glyph, Action{PageBuilder})"/> does a page.</param>
-    /// <param name="build">Sets the card's icon, description, status and conditions.</param>
-    public TSelf Subpage(string title, Action<PageBuilder> page, Action<SubpageBuilder>? build = null)
-    {
-        ArgumentNullException.ThrowIfNull(page);
-
-        var builder = new SubpageBuilder(title);
-        build?.Invoke(builder);
-
-        Add(new SubpageCard(builder.Info, PageBuilder.Build(page)));
-        return Self;
-    }
-
-    /// <summary>
-    ///     Adds a large card with a score as a ring that fills and colors from red to green, as Windows Settings shows
-    ///     its own, with the recommendations that raise it. Usually the first thing on a page, or a category's header.
+    ///     Adds a large card with a score shown as a ring that fills and changes color from red to green, as Windows Settings shows its own, with the recommendations that raise it.
+    ///     Usually the first card on a page, or in a category's header.
     /// </summary>
     /// <example>
     ///     <code>
@@ -410,8 +388,8 @@ public abstract class CardsBuilder<TSelf>
     }
 
     /// <summary>
-    ///     Adds a compact card per item of <paramref name="items"/>, which follow it as it changes, such as the folders
-    ///     on <c>PATH</c>. Each row can have small icon buttons that act on its item.
+    ///     Adds a compact card for each item of <paramref name="items"/>, which follow it as it changes, such as the folders on <c>PATH</c>.
+    ///     Each row can have small icon buttons that act on its item.
     /// </summary>
     /// <example>
     ///     <code>
@@ -421,6 +399,7 @@ public abstract class CardsBuilder<TSelf>
     ///         .Action(Glyph.Delete, "Remove from PATH", (entry, _) => RemoveAsync(entry)))
     ///     </code>
     /// </example>
+    /// <typeparam name="T">The type of the items.</typeparam>
     /// <param name="items">The items, in order.</param>
     /// <param name="title">The title of an item's row.</param>
     /// <param name="build">Sets the rows' descriptions, icons and buttons.</param>
@@ -437,12 +416,34 @@ public abstract class CardsBuilder<TSelf>
     }
 
     /// <summary>
-    ///     Adds a card with a keyboard shortcut, changed by clicking it and pressing the new keys. Only for Sill's own
-    ///     pages, as plugins can't register shortcuts yet.
+    ///     Adds a card that opens a subpage, as Windows Settings does for content too large for the page itself, such as a history.
+    ///     The subpage has the card's title, and its heading leads back to this page.
     /// </summary>
-    /// <param name="title">The card's title, which says what the shortcut does.</param>
-    /// <param name="value">The shortcut as Sill writes it, such as <c>Ctrl+Shift+Alt+P</c>, or empty when it's off.</param>
-    /// <param name="build">Sets the card's icon, description, status, buttons and conditions.</param>
+    /// <example>
+    ///     <code>
+    ///     .Subpage("Timeline", page => page
+    ///         .Timeline(entries, entry => entry.At, entry => entry.Title),
+    ///         card => card
+    ///             .Icon(Glyph.History)
+    ///             .Status(entries.Map(list => $"{list.Count}")))
+    ///     </code>
+    /// </example>
+    /// <param name="title">The title of the card and of the subpage.</param>
+    /// <param name="page">Describes the subpage, as <see cref="IPluginContext.SetPage(Glyph, Action{PageBuilder})"/> does for a page.</param>
+    /// <param name="build">Sets the card's icon, description, status and conditions.</param>
+    public TSelf Subpage(string title, Action<PageBuilder> page, Action<SubpageBuilder>? build = null)
+    {
+        ArgumentNullException.ThrowIfNull(page);
+
+        var builder = new SubpageBuilder(title);
+        build?.Invoke(builder);
+
+        Add(new SubpageCard(builder.Info, PageBuilder.Build(page)));
+        return Self;
+    }
+
+    #endregion
+
     internal TSelf Shortcut(string title, IValue<string> value, Action<ShortcutBuilder>? build = null)
     {
         ArgumentNullException.ThrowIfNull(value);
@@ -454,8 +455,8 @@ public abstract class CardsBuilder<TSelf>
         return Self;
     }
 
+    private protected abstract void Add(PageElement element);
+
     private TSelf Self
         => (TSelf)this;
-
-    private protected abstract void Add(PageElement element);
 }

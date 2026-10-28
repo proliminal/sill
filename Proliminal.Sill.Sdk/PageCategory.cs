@@ -1,49 +1,49 @@
 namespace Proliminal.Sill.Sdk;
 
 /// <summary>
-///     A group of pages that share one entry in the settings window's navigation bar, as Personalization does in Windows
-///     Settings. Its page links to the pages in it.
+///     Represents a container for a group of pages that share one entry in the settings window's navigation bar.
 /// </summary>
+/// <example>
+///     <code>
+///     private static readonly PageCategory _work = new("Work", Glyph.Work, "Timers, tickets and the projects they're for.");
+///
+///     context.SetPage(Glyph.Clock, _work, "What's running now, and what ran today.", page => page ...);
+///     </code>
+/// </example>
 public sealed class PageCategory
 {
-    private PageCategory(string id)
-        => Id = id;
+    /// <summary>
+    ///     Gets the category name in the navigation bar, and the title of its page.
+    /// </summary>
+    public string Title { get; }
 
     /// <summary>
-    ///     Shells, the terminal and the folders they find programs in.
+    ///     Gets the category icon in the navigation bar.
     /// </summary>
-    public static PageCategory Developer { get; } = new("Developer");
+    public Glyph Icon { get; }
 
     /// <summary>
-    ///     Tools for code and data, such as encoding text, hashing it, making GUIDs and reading JWTs. Pages here work on
-    ///     what's typed or copied, on the PC only.
+    ///     Gets a paragraph at the top of the category page, stating what it contains.
     /// </summary>
-    public static PageCategory Tools { get; } = new("Tools");
+    public string Description { get; }
 
     /// <summary>
-    ///     What your account shares, which apps use your camera, microphone and location, and what the PC's owner manages.
-    ///     Pages here only change settings of the signed-in account, never those of the PC or its organization.
+    ///     Creates a new instance of <see cref="PageCategory"/>. It's shown once a page is put in it.
     /// </summary>
-    public static PageCategory Privacy { get; } = new("Privacy");
+    /// <param name="title">The name in the navigation bar, and the title of its page.</param>
+    /// <param name="icon">The icon in the navigation bar.</param>
+    /// <param name="description">A paragraph at the top of the category page, stating what it contains.</param>
+    public PageCategory(string title, Glyph icon, string description)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(title);
+        ArgumentException.ThrowIfNullOrWhiteSpace(description);
 
-    /// <summary>
-    ///     How well Windows Security and the PC protect the account, what Windows Security doesn't say, and what starts
-    ///     with the account. Pages here only change settings of the signed-in account; the PC's they show.
-    /// </summary>
-    public static PageCategory Security { get; } = new("Security");
-
-    /// <summary>
-    ///     The name Sill knows the category by.
-    /// </summary>
-    public string Id { get; }
+        Title = title;
+        Icon = icon;
+        Description = description;
+    }
 
     /// <inheritdoc />
     public override string ToString()
-        => Id;
-
-    /// <summary>
-    ///     Sill's own plugin pages: its plugins, the ones from the plugins folder, and the plugin documentation. Only Sill
-    ///     puts pages here.
-    /// </summary>
-    internal static PageCategory Plugins { get; } = new("Plugins");
+        => Title;
 }

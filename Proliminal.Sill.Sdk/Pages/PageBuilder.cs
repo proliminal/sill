@@ -6,8 +6,8 @@ using Proliminal.Sill.Sdk.Pages.Model.Abstractions;
 namespace Proliminal.Sill.Sdk.Pages;
 
 /// <summary>
-///     Describes a settings page, from top to bottom. Pass a lambda that uses it to
-///     <see cref="IPluginContext.SetPage(Glyph, Action{PageBuilder})"/>.
+///     Represents a builder for a settings page, from top to bottom.
+///     Pass a lambda that uses it to <see cref="IPluginContext.SetPage(Glyph, Action{PageBuilder})"/>.
 /// </summary>
 /// <example>
 ///     <code>
@@ -28,7 +28,7 @@ public sealed class PageBuilder : CardsBuilder<PageBuilder>
     }
 
     /// <summary>
-    ///     Adds a paragraph saying what the plugin does. Usually the first thing on the page.
+    ///     Adds a paragraph that explains what the plugin does. It's usually the first element on the page.
     /// </summary>
     /// <param name="text">The paragraph.</param>
     public PageBuilder Intro(string text)
@@ -40,17 +40,16 @@ public sealed class PageBuilder : CardsBuilder<PageBuilder>
     }
 
     /// <summary>
-    ///     Adds words people may search Sill for to find this page, besides its title, description and the titles and
-    ///     descriptions of its cards, which are found already: other names for what it does, or the names of what it
-    ///     works with. For a word that belongs to one card, use that card's
-    ///     <see cref="Abstractions.CardBuilder{TSelf}.Keywords"/>, so the page opens with the card in view.
+    ///     Adds search terms that find this page in Sill, such as other names for what it does or the names of what it works with.
+    ///     The page's title and description, and the titles and descriptions of its cards, are already searched.
+    ///     For a term that belongs to a single card, use <see cref="Abstractions.CardBuilder{TSelf}.Keywords"/> on that card instead, so the page opens with the card in view.
     /// </summary>
     /// <example>
     ///     <code>
     ///     .Keywords("base64", "url encode", "percent-encoding")
     ///     </code>
     /// </example>
-    /// <param name="keywords">A word or a few, each; case doesn't matter.</param>
+    /// <param name="keywords">The search terms, each a word or a few. Case is ignored.</param>
     public PageBuilder Keywords(params string[] keywords)
     {
         Keyword.AddTo(_keywords, keywords);
@@ -75,9 +74,9 @@ public sealed class PageBuilder : CardsBuilder<PageBuilder>
     }
 
     /// <summary>
-    ///     Adds a timeline of <paramref name="items"/>, which follows it as it changes: newest first under a heading per
-    ///     day, with the time of each, and what's still going on above it. It has its own headings, so it's usually the
-    ///     only thing on a subpage.
+    ///     Adds a timeline of <paramref name="items"/> that updates as they change.
+    ///     Items are shown newest first under a heading per day, with the time of each, and ongoing items above the rest.
+    ///     The timeline has its own headings, so it's usually the only element on a subpage.
     /// </summary>
     /// <example>
     ///     <code>
@@ -86,14 +85,14 @@ public sealed class PageBuilder : CardsBuilder<PageBuilder>
     ///         .Tag(item => item.Area)
     ///         .Icon(item => item.IsWarning ? Glyph.Warning : null)
     ///         .Tone(item => item.IsWarning ? Tone.Caution : Tone.Neutral)
-    ///         .Empty("Nothing happened yet."))
+    ///         .EmptyText("Nothing happened yet."))
     ///     </code>
     /// </example>
     /// <typeparam name="T">The type of the items.</typeparam>
     /// <param name="items">The items, in any order.</param>
-    /// <param name="at">When an item happened or started, in local time.</param>
-    /// <param name="title">What happened.</param>
-    /// <param name="build">Sets the items' text, tags, icons, tones and details, and which last.</param>
+    /// <param name="at">Gets when an item happened or started, in local time.</param>
+    /// <param name="title">Gets what happened.</param>
+    /// <param name="build">Sets the text, tags, icons, tones and details of the items, and which of them last.</param>
     public PageBuilder Timeline<T>(IReadOnlyValue<IReadOnlyList<T>> items, Func<T, DateTime> at, Func<T, string> title, Action<TimelineBuilder<T>>? build = null)
     {
         ArgumentNullException.ThrowIfNull(items);
@@ -110,9 +109,6 @@ public sealed class PageBuilder : CardsBuilder<PageBuilder>
     private protected override void Add(PageElement element)
         => _elements.Add(element);
 
-    /// <summary>
-    ///     Describes a page with <paramref name="build"/>.
-    /// </summary>
     internal static PageModel Build(Action<PageBuilder> build)
     {
         ArgumentNullException.ThrowIfNull(build);

@@ -1,10 +1,7 @@
 using Proliminal.Sill.Sdk.Abstractions;
 
-namespace Proliminal.Sill.Sdk;
+namespace Proliminal.Sill.Sdk.Values;
 
-/// <summary>
-///     A value kept outside Sill. Created by <see cref="Values.External{T}(Func{T}, Func{T, Task}, Func{bool}?)"/>.
-/// </summary>
 internal sealed class ExternalValue<T>(Func<T> get, Func<T, Task> set, Func<bool>? isAvailable) : IValue<T>
 {
     private T _value = get();

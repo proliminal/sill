@@ -4,11 +4,56 @@ using Proliminal.Sill.Sdk.Abstractions;
 namespace Proliminal.Sill.Sdk.Pages.Model.Abstractions;
 
 /// <summary>
-///     A row on the page, as in Windows Settings: an icon, title and description on the left and a control on the right.
+///     Represents a card on a page, as in Windows Settings: an icon, title and description on the left and a control on the right.
 /// </summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
 public abstract class CardElement : PageElement
 {
+    /// <summary>
+    ///     Gets the card's title.
+    /// </summary>
+    public string Title { get; }
+
+    /// <summary>
+    ///     Gets the text under the title, if any.
+    /// </summary>
+    public IReadOnlyValue<string>? Description { get; }
+
+    /// <summary>
+    ///     Gets the icon left of the title, if any.
+    /// </summary>
+    public Glyph? Icon { get; }
+
+    /// <summary>
+    ///     Gets the condition the control is enabled on, or <see langword="null"/> when it's always enabled.
+    /// </summary>
+    public IReadOnlyValue<bool>? EnabledWhen { get; }
+
+    /// <summary>
+    ///     Gets the text left of the control, such as <c>Installed</c>, if any. It's hidden while it's empty.
+    /// </summary>
+    public IReadOnlyValue<string?>? Status { get; }
+
+    /// <summary>
+    ///     Gets the color of <see cref="Status"/>, or <see langword="null"/> for the default status color.
+    /// </summary>
+    public IReadOnlyValue<Tone>? StatusTone { get; }
+
+    /// <summary>
+    ///     Gets the extra buttons left of the control, in order.
+    /// </summary>
+    public IReadOnlyList<CardAction> Actions { get; }
+
+    /// <summary>
+    ///     Gets other words people search for the card by, besides its title and description.
+    /// </summary>
+    public IReadOnlyList<string> Keywords { get; }
+
+    /// <summary>
+    ///     Gets the lines inside the card under its description, if any.
+    /// </summary>
+    public IReadOnlyValue<IReadOnlyList<CardLine>>? Lines { get; }
+
     private protected CardElement(CardInfo info)
         : base(info.VisibleWhen)
     {
@@ -18,37 +63,10 @@ public abstract class CardElement : PageElement
         EnabledWhen = info.EnabledWhen;
         Status = info.Status;
         StatusTone = info.StatusTone;
-        Details = info.Details;
+        Lines = info.Lines;
         Actions = info.Actions;
         Keywords = info.Keywords;
     }
-
-    /// <summary>The card's title.</summary>
-    public string Title { get; }
-
-    /// <summary>Text under the title, if any.</summary>
-    public IReadOnlyValue<string>? Description { get; }
-
-    /// <summary>The icon left of the title, if any.</summary>
-    public Glyph? Icon { get; }
-
-    /// <summary>The control is only enabled while this is <see langword="true"/>, or always when it's <see langword="null"/>.</summary>
-    public IReadOnlyValue<bool>? EnabledWhen { get; }
-
-    /// <summary>Text left of the control, such as <c>Installed</c>, if any. It's hidden while it's empty.</summary>
-    public IReadOnlyValue<string?>? Status { get; }
-
-    /// <summary>The color of <see cref="Status"/>, or the usual status color when it's <see langword="null"/>.</summary>
-    public IReadOnlyValue<Tone>? StatusTone { get; }
-
-    /// <summary>Extra buttons left of the control, in order.</summary>
-    public IReadOnlyList<CardAction> Actions { get; }
-
-    /// <summary>Other words people search for the card by, besides its title and description.</summary>
-    public IReadOnlyList<string> Keywords { get; }
-
-    /// <summary>Lines inside the card under its description, if any.</summary>
-    public IReadOnlyValue<IReadOnlyList<CardDetail>>? Details { get; }
 
     internal override IEnumerable<IReadOnlyValue> GetValues()
     {
@@ -67,8 +85,8 @@ public abstract class CardElement : PageElement
         if (StatusTone is not null)
             yield return StatusTone;
 
-        if (Details is not null)
-            yield return Details;
+        if (Lines is not null)
+            yield return Lines;
 
         foreach (var action in Actions)
         {

@@ -4,11 +4,36 @@ using Proliminal.Sill.Sdk.Abstractions;
 namespace Proliminal.Sill.Sdk.Pages.Model;
 
 /// <summary>
-///     A small icon button on one row of a list, such as Remove.
+///     Represents a small icon button on one row of a list, such as Remove.
 /// </summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
 public sealed class ListItemAction
 {
+    /// <summary>
+    ///     Gets the button's icon.
+    /// </summary>
+    public Glyph Icon { get; }
+
+    /// <summary>
+    ///     Gets what the button does, shown as its tooltip and read out by screen readers.
+    /// </summary>
+    public string Label { get; }
+
+    /// <summary>
+    ///     Gets the action the button runs for this row's item.
+    /// </summary>
+    public PluginAction OnClick { get; }
+
+    /// <summary>
+    ///     Gets whether the button can be used for this row's item, such as Open for a folder that exists.
+    /// </summary>
+    public bool IsEnabled { get; }
+
+    /// <summary>
+    ///     Gets the condition the button is enabled on for every row, or <see langword="null"/> when it's always enabled.
+    /// </summary>
+    public IReadOnlyValue<bool>? EnabledWhen { get; }
+
     internal ListItemAction(Glyph icon, string label, PluginAction onClick, bool isEnabled, IReadOnlyValue<bool>? enabledWhen)
     {
         Icon = icon;
@@ -17,19 +42,4 @@ public sealed class ListItemAction
         IsEnabled = isEnabled;
         EnabledWhen = enabledWhen;
     }
-
-    /// <summary>The button's icon.</summary>
-    public Glyph Icon { get; }
-
-    /// <summary>What the button does, shown as its tooltip and read out by screen readers.</summary>
-    public string Label { get; }
-
-    /// <summary>What the button does, for this row's item.</summary>
-    public PluginAction OnClick { get; }
-
-    /// <summary>Whether the button can be used for this row's item, such as Open for a folder that exists.</summary>
-    public bool IsEnabled { get; }
-
-    /// <summary>The button is only enabled while this is <see langword="true"/>, for every row, or always when it's <see langword="null"/>.</summary>
-    public IReadOnlyValue<bool>? EnabledWhen { get; }
 }

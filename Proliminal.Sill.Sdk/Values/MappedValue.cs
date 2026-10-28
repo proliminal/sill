@@ -1,10 +1,7 @@
 using Proliminal.Sill.Sdk.Abstractions;
 
-namespace Proliminal.Sill.Sdk;
+namespace Proliminal.Sill.Sdk.Values;
 
-/// <summary>
-///     A value computed from another. Created by <see cref="ValueExtensions.Map"/>.
-/// </summary>
 internal class MappedValue<T, TResult>(IReadOnlyValue<T> source, Func<T, TResult> map) : IReadOnlyValue<TResult>
 {
     public TResult Value

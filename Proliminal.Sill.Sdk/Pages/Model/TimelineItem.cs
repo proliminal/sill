@@ -3,48 +3,66 @@ using System.ComponentModel;
 namespace Proliminal.Sill.Sdk.Pages.Model;
 
 /// <summary>
-///     Something on a timeline: what happened, or what started, at one moment.
+///     Represents an event on a timeline: something that happened, or started, at one moment.
 /// </summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
 public sealed class TimelineItem
 {
-    internal TimelineItem(DateTime at, string title, string? text, string? tag, Glyph? icon, Tone tone, IReadOnlyList<CardDetail> details, DateTime? endedAt, bool isOngoing)
+    /// <summary>
+    ///     Gets when the event happened or started, in local time.
+    /// </summary>
+    public DateTime StartedAt { get; }
+
+    /// <summary>
+    ///     Gets what happened.
+    /// </summary>
+    public string Title { get; }
+
+    /// <summary>
+    ///     Gets more about the event, shown under the title, if any.
+    /// </summary>
+    public string? Text { get; }
+
+    /// <summary>
+    ///     Gets a word or two right of the title, such as the area it's about, if any.
+    /// </summary>
+    public string? Tag { get; }
+
+    /// <summary>
+    ///     Gets the icon on the timeline, or <see langword="null"/> for a dot.
+    /// </summary>
+    public Glyph? Icon { get; }
+
+    /// <summary>
+    ///     Gets how much the event asks for attention, shown in the color of its icon.
+    /// </summary>
+    public Tone Tone { get; }
+
+    /// <summary>
+    ///     Gets the lines under the text, from top to bottom.
+    /// </summary>
+    public IReadOnlyList<CardLine> Lines { get; }
+
+    /// <summary>
+    ///     Gets when a lasting event ended, if it has.
+    /// </summary>
+    public DateTime? EndedAt { get; }
+
+    /// <summary>
+    ///     Gets whether the event is lasting and still ongoing, which places it above the rest.
+    /// </summary>
+    public bool IsOngoing { get; }
+
+    internal TimelineItem(DateTime startedAt, string title, string? text, string? tag, Glyph? icon, Tone tone, IReadOnlyList<CardLine> lines, DateTime? endedAt, bool isOngoing)
     {
-        At = at;
+        StartedAt = startedAt;
         Title = title;
         Text = text;
         Tag = tag;
         Icon = icon;
         Tone = tone;
-        Details = details;
+        Lines = lines;
         EndedAt = endedAt;
         IsOngoing = isOngoing;
     }
-
-    /// <summary>When it happened or started, in local time.</summary>
-    public DateTime At { get; }
-
-    /// <summary>What happened.</summary>
-    public string Title { get; }
-
-    /// <summary>More about it under the title, if anything.</summary>
-    public string? Text { get; }
-
-    /// <summary>A word or two right of the title, such as the area it's about, if any.</summary>
-    public string? Tag { get; }
-
-    /// <summary>The icon on the timeline, if any; a dot otherwise.</summary>
-    public Glyph? Icon { get; }
-
-    /// <summary>How much it asks for attention, in the color of its icon.</summary>
-    public Tone Tone { get; }
-
-    /// <summary>Lines under the text, from top to bottom.</summary>
-    public IReadOnlyList<CardDetail> Details { get; }
-
-    /// <summary>When something that lasted was over, if it was.</summary>
-    public DateTime? EndedAt { get; }
-
-    /// <summary>Whether it lasts and is still going on, which puts it above the rest.</summary>
-    public bool IsOngoing { get; }
 }

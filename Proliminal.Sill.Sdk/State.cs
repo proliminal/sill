@@ -3,7 +3,7 @@ using Proliminal.Sill.Sdk.Abstractions;
 namespace Proliminal.Sill.Sdk;
 
 /// <summary>
-///     A value kept in memory. Create it with <see cref="Values.State{T}"/>.
+///     Represents a value kept in memory. Create it with <see cref="Value.State{T}"/>.
 /// </summary>
 /// <typeparam name="T">The value's type.</typeparam>
 public sealed class State<T> : IValue<T>
@@ -14,7 +14,7 @@ public sealed class State<T> : IValue<T>
         => _value = initial;
 
     /// <summary>
-    ///     The current value. Setting it updates the cards bound to it; it can be set from any thread.
+    ///     Gets or sets the current value. Setting it updates the cards bound to it; it can be set from any thread.
     /// </summary>
     public T Value
     {

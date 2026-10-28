@@ -4,40 +4,54 @@ using Proliminal.Sill.Sdk.Abstractions;
 namespace Proliminal.Sill.Sdk.Pages.Model;
 
 /// <summary>
-///     A button in a popup's footer, and the key that presses it.
+///     Represents a button in a popup's footer, and the key that presses it.
 /// </summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
 public sealed class PopupCommand
 {
-    internal PopupCommand(string label, PluginAction run, bool isDefault, char? key, bool closes, IReadOnlyValue<bool>? visibleWhen, IReadOnlyValue<bool>? enabledWhen)
+    /// <summary>
+    ///     Gets the button's text.
+    /// </summary>
+    public string Label { get; }
+
+    /// <summary>
+    ///     Gets the action the button runs.
+    /// </summary>
+    public PluginAction OnClick { get; }
+
+    /// <summary>
+    ///     Gets whether Enter presses the button, when it's the first such command that's shown and enabled.
+    /// </summary>
+    public bool IsDefault { get; }
+
+    /// <summary>
+    ///     Gets the letter that presses the button with Ctrl, from <c>A</c> to <c>Z</c>, if any.
+    /// </summary>
+    public char? Key { get; }
+
+    /// <summary>
+    ///     Gets whether the popup closes once the action completes without an error.
+    /// </summary>
+    public bool ClosesPopup { get; }
+
+    /// <summary>
+    ///     Gets the condition the button is shown on, or <see langword="null"/> when it's always shown.
+    /// </summary>
+    public IReadOnlyValue<bool>? VisibleWhen { get; }
+
+    /// <summary>
+    ///     Gets the condition the button is enabled on, or <see langword="null"/> when it's always enabled.
+    /// </summary>
+    public IReadOnlyValue<bool>? EnabledWhen { get; }
+
+    internal PopupCommand(string label, PluginAction onClick, bool isDefault, char? key, bool closesPopup, IReadOnlyValue<bool>? visibleWhen, IReadOnlyValue<bool>? enabledWhen)
     {
         Label = label;
-        Run = run;
+        OnClick = onClick;
         IsDefault = isDefault;
         Key = key;
-        Closes = closes;
+        ClosesPopup = closesPopup;
         VisibleWhen = visibleWhen;
         EnabledWhen = enabledWhen;
     }
-
-    /// <summary>The button's text.</summary>
-    public string Label { get; }
-
-    /// <summary>What the button does.</summary>
-    public PluginAction Run { get; }
-
-    /// <summary>Whether Enter presses it, when it's the first such command that's shown and enabled.</summary>
-    public bool IsDefault { get; }
-
-    /// <summary>The letter that presses it with Ctrl, from <c>A</c> to <c>Z</c>, if any.</summary>
-    public char? Key { get; }
-
-    /// <summary>Whether the popup closes once it's done without an error.</summary>
-    public bool Closes { get; }
-
-    /// <summary>The button is only shown while this is <see langword="true"/>, or always when it's <see langword="null"/>.</summary>
-    public IReadOnlyValue<bool>? VisibleWhen { get; }
-
-    /// <summary>The button is only enabled while this is <see langword="true"/>, or always when it's <see langword="null"/>.</summary>
-    public IReadOnlyValue<bool>? EnabledWhen { get; }
 }

@@ -5,11 +5,26 @@ using Proliminal.Sill.Sdk.Pages.Model.Abstractions;
 namespace Proliminal.Sill.Sdk.Pages.Model;
 
 /// <summary>
-///     Cards and lists under a header.
+///     Represents a group of cards and lists under a header.
 /// </summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
 public sealed class GroupElement : PageElement
 {
+    /// <summary>
+    ///     Gets the header above the cards.
+    /// </summary>
+    public string Header { get; }
+
+    /// <summary>
+    ///     Gets the cards and lists, from top to bottom.
+    /// </summary>
+    public IReadOnlyList<PageElement> Elements { get; }
+
+    /// <summary>
+    ///     Gets the condition the cards' controls are enabled on, or <see langword="null"/> when they're always enabled.
+    /// </summary>
+    public IReadOnlyValue<bool>? EnabledWhen { get; }
+
     internal GroupElement(string header, IReadOnlyList<PageElement> elements, IReadOnlyValue<bool>? visibleWhen, IReadOnlyValue<bool>? enabledWhen)
         : base(visibleWhen)
     {
@@ -17,15 +32,6 @@ public sealed class GroupElement : PageElement
         Elements = elements;
         EnabledWhen = enabledWhen;
     }
-
-    /// <summary>The header above the cards.</summary>
-    public string Header { get; }
-
-    /// <summary>The cards and lists, from top to bottom.</summary>
-    public IReadOnlyList<PageElement> Elements { get; }
-
-    /// <summary>The cards' controls are only enabled while this is <see langword="true"/>, or always when it's <see langword="null"/>.</summary>
-    public IReadOnlyValue<bool>? EnabledWhen { get; }
 
     internal override IEnumerable<IReadOnlyValue> GetValues()
     {
