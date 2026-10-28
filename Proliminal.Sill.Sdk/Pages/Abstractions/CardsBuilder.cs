@@ -182,6 +182,37 @@ public abstract class CardsBuilder<TSelf>
     }
 
     /// <summary>
+    ///     Adds a card with a dropdown that picks any number of tags, such as the labels of a time log. It opens a list to search, with a
+    ///     check by each tag that's picked, which stays open while tags are checked; the picked tags are shown under the description too.
+    ///     The value changes as soon as a tag is checked or unchecked.
+    /// </summary>
+    /// <example>
+    ///     <code>
+    ///     .Tags("Tags", picked, tags => tags
+    ///         .Icon(Glyph.Tag)
+    ///         .Options(available, tag => tag.Name)
+    ///         .Color(tag => tag.Color)
+    ///         .Group(tag => tag.Project ?? "All projects")
+    ///         .Placeholder("Search tags"))
+    ///     </code>
+    /// </example>
+    /// <typeparam name="T">The type of the tags.</typeparam>
+    /// <param name="title">The card's title.</param>
+    /// <param name="value">The picked tags, in the order they were picked.</param>
+    /// <param name="build">Sets the tags to pick from, and the card's icon, description and conditions.</param>
+    public TSelf Tags<T>(string title, IValue<IReadOnlyList<T>> value, Action<TagsBuilder<T>> build)
+    {
+        ArgumentNullException.ThrowIfNull(value);
+        ArgumentNullException.ThrowIfNull(build);
+
+        var builder = new TagsBuilder<T>(title);
+        build(builder);
+
+        Add(builder.Build(value));
+        return Self;
+    }
+
+    /// <summary>
     ///     Adds a card with a color picker, which offers dark presets, a typed-in <c>#RRGGBB</c> color and "Default".
     /// </summary>
     /// <example>
